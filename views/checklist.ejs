@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head', {title: 'Checklist de Segurança'}); %>
+</head>
+<body>
+  <%- include('partials/header', {user: user}); %>
+  
+  <main class="container my-4">
+    <h1 class="mb-4">Checklist de Segurança</h1>
+    
+    <% if (typeof success !== 'undefined' && success) { %>
+      <div class="alert alert-success"><%= success %></div>
+    <% } %>
+    
+    <div class="card">
+      <div class="card-header">
+        <h5>Checklist do Turno</h5>
+      </div>
+      <div class="card-body">
+        <form action="/checklist" method="POST">
+          <div class="mb-4">
+            <h6 class="mb-3">Equipamentos de Proteção Individual</h6>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="epi1" name="epi1" <%= checklist && checklist.epi1 ? 'checked' : '' %>>
+              <label class="form-check-label" for="epi1">Todos os colaboradores utilizando EPIs adequados</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="epi2" name="epi2" <%= checklist && checklist.epi2 ? 'checked' : '' %>>
+              <label class="form-check-label" for="epi2">EPIs em bom estado de conservação</label>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h6 class="mb-3">Equipamentos e Máquinas</h6>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="maq1" name="maq1" <%= checklist && checklist.maq1 ? 'checked' : '' %>>
+              <label class="form-check-label" for="maq1">Todos os equipamentos com proteções instaladas</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="maq2" name="maq2" <%= checklist && checklist.maq2 ? 'checked' : '' %>>
+              <label class="form-check-label" for="maq2">Sinalização de segurança visível</label>
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h6 class="mb-3">Área de Trabalho</h6>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="area1" name="area1" <%= checklist && checklist.area1 ? 'checked' : '' %>>
+              <label class="form-check-label" for="area1">Piso limpo e sem obstáculos</label>
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="area2" name="area2" <%= checklist && checklist.area2 ? 'checked' : '' %>>
+              <label class="form-check-label" for="area2">Saídas de emergência desobstruídas</label>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="observacoes" class="form-label">Observações</label>
+            <textarea class="form-control" id="observacoes" name="observacoes" rows="3"><%= checklist ? checklist.observacoes || '' : '' %></textarea>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">Enviar Checklist</button>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('partials/footer'); %>
+</body>
+</html>

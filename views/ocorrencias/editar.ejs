@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <%- include('../partials/head', {title: 'Editar Ocorrência'}); %>
+</head>
+<body>
+  <%- include('../partials/header', {user: user}); %>
+  
+  <main class="container my-4">
+    <h1 class="mb-4">Editar Ocorrência</h1>
+    
+    <% if (typeof error !== 'undefined') { %>
+      <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    
+    <form action="/ocorrencias/editar/<%= ocorrencia.id %>" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="tipo" class="form-label">Tipo</label>
+        <select class="form-select" id="tipo" name="tipo" required>
+          <option value="manutencao" <%= ocorrencia.tipo === 'manutencao' ? 'selected' : '' %>>Manutenção</option>
+          <option value="incidente" <%= ocorrencia.tipo === 'incidente' ? 'selected' : '' %>>Incidente</option>
+          <option value="melhoria" <%= ocorrencia.tipo === 'melhoria' ? 'selected' : '' %>>Sugestão de Melhoria</option>
+          <option value="outro" <%= ocorrencia.tipo === 'outro' ? 'selected' : '' %>>Outro</option>
+        </select>
+      </div>
+      
+      <div class="mb-3">
+        <label for="descricao" class="form-label">Descrição</label>
+        <textarea class="form-control" id="descricao" name="descricao" rows="3" required><%= ocorrencia.descricao %></textarea>
+      </div>
+      
+      <div class="mb-3">
+        <label for="urgencia" class="form-label">Urgência</label>
+        <select class="form-select" id="urgencia" name="urgencia" required>
+          <option value="baixa" <%= ocorrencia.urgencia === 'baixa' ? 'selected' : '' %>>Baixa</option>
+          <option value="media" <%= ocorrencia.urgencia === 'media' ? 'selected' : '' %>>Média</option>
+          <option value="alta" <%= ocorrencia.urgencia === 'alta' ? 'selected' : '' %>>Alta</option>
+        </select>
+      </div>
+      
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" id="status" name="status" required>
+          <option value="pendente" <%= ocorrencia.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+          <option value="em_andamento" <%= ocorrencia.status === 'em_andamento' ? 'selected' : '' %>>Em Andamento</option>
+          <option value="resolvido" <%= ocorrencia.status === 'resolvido' ? 'selected' : '' %>>Resolvido</option>
+        </select>
+      </div>
+      
+      <div class="mb-3">
+        <label class="form-label">Imagem atual:</label>
+        <% if (ocorrencia.imagem) { %>
+          <div>
+            <img src="<%= ocorrencia.imagem %>" style="max-height: 200px;" class="img-thumbnail mb-2">
+            <div class="form-text">Deixe em branco para manter a imagem atual</div>
+          </div>
+        <% } else { %>
+          <div class="form-text">Nenhuma imagem cadastrada</div>
+        <% } %>
+        <input class="form-control" type="file" id="imagem" name="imagem" accept="image/*">
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+      <a href="/ocorrencias" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </main>
+  
+  <%- include('../partials/footer'); %>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <%- include('partials/head', {title: 'Dashboard'}); %>
+</head>
+<body>
+  <%- include('partials/header', {user: user}); %>
+  
+  <main class="container my-4">
+    <h1 class="mb-4">Resumo do Turno</h1>
+    
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Ocorrências</h5>
+            <p class="display-6"><%= typeof totalOcorrencias !== 'undefined' ? totalOcorrencias : 0 %></p>
+            <a href="/ocorrencias" class="btn btn-outline-primary">Ver todas</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Checklist Pendente</h5>
+            <p class="display-6">
+              <% 
+                const totalItens = 6; // Total de itens do checklist
+                let itensConcluidos = 0;
+                
+                if (checklist) {
+                  itensConcluidos = [
+                    checklist.epi1, 
+                    checklist.epi2, 
+                    checklist.maq1, 
+                    checklist.maq2, 
+                    checklist.area1, 
+                    checklist.area2
+                  ].filter(Boolean).length;
+                }
+              %>
+              <%= itensConcluidos %>/<%= totalItens %>
+            </p>
+            <a href="/checklist" class="btn btn-outline-primary">
+              <%= checklist ? 'Atualizar' : 'Completar' %>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">Alertas</h5>
+            <p class="display-6"><%= alertas || 0 %></p>
+            <a href="/alertas" class="btn btn-outline-danger">Ver alertas</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Últimas Ocorrências</h5>
+        <a href="/ocorrencias/nova" class="btn btn-sm btn-primary">Nova Ocorrência</a>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Urgência</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (ocorrencias && ocorrencias.length > 0) { %>
+                <% ocorrencias.forEach(ocorrencia => { %>
+                  <tr>
+                    <td><%= new Date(ocorrencia.data_criacao).toLocaleDateString('pt-BR') %></td>
+                    <td><%= ocorrencia.tipo %></td>
+                    <td><%= ocorrencia.descricao.substring(0, 50) %><%= ocorrencia.descricao.length > 50 ? '...' : '' %></td>
+                    <td>
+                      <% if (ocorrencia.urgencia === 'alta') { %>
+                        <span class="badge bg-danger"><%= ocorrencia.urgencia %></span>
+                      <% } else if (ocorrencia.urgencia === 'media') { %>
+                        <span class="badge bg-warning text-dark"><%= ocorrencia.urgencia %></span>
+                      <% } else { %>
+                        <span class="badge bg-success"><%= ocorrencia.urgencia %></span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (ocorrencia.status === 'pendente') { %>
+                        <span class="badge bg-warning text-dark"><%= ocorrencia.status %></span>
+                      <% } else if (ocorrencia.status === 'em_andamento') { %>
+                        <span class="badge bg-info"><%= ocorrencia.status %></span>
+                      <% } else { %>
+                        <span class="badge bg-success"><%= ocorrencia.status %></span>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="5" class="text-center">Nenhuma ocorrência registrada</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('partials/footer'); %>
+  <script src="/js/script.js"></script>
+</body>
+</html>

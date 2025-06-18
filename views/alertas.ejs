@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <%- include('partials/head', {title: 'Alertas'}); %>
+</head>
+<body>
+  <%- include('partials/header', {user: user}); %>
+  
+  <main class="container my-4">
+    <h1 class="mb-4">Alertas do Turno</h1>
+    
+    <div class="card mb-4">
+      <div class="card-header bg-warning">
+        <h5 class="mb-0">Alertas Ativos</h5>
+      </div>
+      <div class="card-body">
+        <div class="list-group">
+          <div class="list-group-item list-group-item-danger">
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1">Equipamento com temperatura crítica</h6>
+              <small>15 minutos atrás</small>
+            </div>
+            <p class="mb-1">Máquina XYZ está operando a 120°C (limite: 100°C)</p>
+            <small>Área: Produção - Linha 2</small>
+          </div>
+          
+          <div class="list-group-item list-group-item-warning">
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1">EPI não utilizado</h6>
+              <small>1 hora atrás</small>
+            </div>
+            <p class="mb-1">Operador não estava utilizando luvas de proteção</p>
+            <small>Área: Montagem - Setor C</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-header">
+        <h5>Histórico de Alertas</h5>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Data/Hora</th>
+              <th>Tipo</th>
+              <th>Descrição</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10/06/2023 08:15</td>
+              <td>Segurança</td>
+              <td>Porta de emergência obstruída</td>
+              <td><span class="badge bg-success">Resolvido</span></td>
+            </tr>
+            <tr>
+              <td>09/06/2023 14:30</td>
+              <td>Manutenção</td>
+              <td>Vazamento detectado</td>
+              <td><span class="badge bg-success">Resolvido</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('partials/footer'); %>
+  <script src="/js/script.js"></script>
+</body>
+</html>

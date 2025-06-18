@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <%- include('partials/head', {title: 'Ocorrências'}); %>
+    <style>
+        .badge-urgencia-alta {
+            background-color: #dc3545;
+        }
+        .badge-urgencia-media {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .badge-urgencia-baixa {
+            background-color: #28a745;
+        }
+        .preview-imagem {
+            max-width: 100px;
+            max-height: 100px;
+            cursor: pointer;
+        }
+        .modal-imagem {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+  <%- include('partials/header', {user: user}); %>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+  
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
+  
+  <main class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1>Ocorrências</h1>
+      <a href="ocorrencias/nova" class="btn btn-primary">Nova Ocorrência</a>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Urgência</th>
+                <th>Imagem</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (ocorrencias.length > 0) { %>
+                <% ocorrencias.forEach(ocorrencia => { %>
+                  <tr>
+                    <td><%= new Date(ocorrencia.data_criacao).toLocaleDateString('pt-BR') %></td>
+                    <td><%= ocorrencia.tipo %></td>
+                    <td><%= ocorrencia.descricao.substring(0, 50) %><%= ocorrencia.descricao.length > 50 ? '...' : '' %></td>
+                    <td>
+                      <% if (ocorrencia.urgencia === 'alta') { %>
+                        <span class="badge badge-urgencia-alta"><%= ocorrencia.urgencia %></span>
+                      <% } else if (ocorrencia.urgencia === 'media') { %>
+                        <span class="badge badge-urgencia-media"><%= ocorrencia.urgencia %></span>
+                      <% } else { %>
+                        <span class="badge badge-urgencia-baixa"><%= ocorrencia.urgencia %></span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (ocorrencia.imagem) { %>
+                        <img src="<%= ocorrencia.imagem %>" class="preview-imagem" data-bs-toggle="modal" data-bs-target="#imagemModal" data-imagem="<%= ocorrencia.imagem %>">
+                      <% } else { %>
+                        -
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (ocorrencia.status === 'pendente') { %>
+                        <span class="badge bg-warning text-dark"><%= ocorrencia.status %></span>
+                      <% } else if (ocorrencia.status === 'em_andamento') { %>
+                        <span class="badge bg-info"><%= ocorrencia.status %></span>
+                      <% } else { %>
+                        <span class="badge bg-success"><%= ocorrencia.status %></span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <a href="/ocorrencias/editar/<%= ocorrencia.id %>" class="btn btn-sm btn-warning">Editar</a>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="7" class="text-center">Nenhuma ocorrência registrada</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal para visualização de imagem -->
+  <div class="modal fade" id="imagemModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Visualização da Imagem</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="modalImagem" src="" class="modal-imagem">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/footer'); %>
+  
+  <script>
+    // Ativa o modal de visualização de imagem
+    document.addEventListener('DOMContentLoaded', function() {
+      var imagemModal = document.getElementById('imagemModal');
+      if (imagemModal) {
+        imagemModal.addEventListener('show.bs.modal', function(event) {
+          var button = event.relatedTarget;
+          var imagemSrc = button.getAttribute('data-imagem');
+          var modalImg = imagemModal.querySelector('#modalImagem');
+          modalImg.src = imagemSrc;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

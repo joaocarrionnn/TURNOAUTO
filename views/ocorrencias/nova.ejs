@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+</head>
+<body>
+    <%- include('../partials/head', {title: 'Nova Ocorrência'}); %>
+    <%- include('../partials/header', {user: user}); %>
+  
+  <main class="container my-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="mb-0">Nova Ocorrência</h2>
+          </div>
+          <div class="card-body">
+            <form action="/ocorrencias" method="POST" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo de Ocorrência</label>
+                <select class="form-select" id="tipo" name="tipo" required>
+                  <option value="" selected disabled>Selecione um tipo</option>
+                  <option value="Manutenção">Manutenção</option>
+                  <option value="Segurança">Segurança</option>
+                  <option value="Qualidade">Qualidade</option>
+                  <option value="Limpeza">Limpeza</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+              </div>
+              
+              <div class="mb-3">
+                <label for="urgencia" class="form-label">Nível de Urgência</label>
+                <select class="form-select" id="urgencia" name="urgencia" required>
+                  <option value="baixa">Baixa</option>
+                  <option value="media" selected>Média</option>
+                  <option value="alta">Alta</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="imagem" class="form-label">Anexar Imagem (Opcional)</label>
+                <input class="form-control" type="file" id="imagem" name="imagem" accept="image/*">
+              </div>
+              
+              <div class="mb-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status" required>
+                  <option value="pendente" selected>Pendente</option>
+                  <option value="em_andamento">Em Andamento</option>
+                  <option value="resolvido">Resolvido</option>
+                </select>
+              </div>
+              
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Registrar Ocorrência</button>
+                <a href="/ocorrencias" class="btn btn-outline-secondary">Cancelar</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <%- include('../partials/footer'); %>
+</body>
+</html>

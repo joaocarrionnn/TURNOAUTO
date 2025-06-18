@@ -1,0 +1,14 @@
+<header class="navbar navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="/">TURNOSIM</a>
+      <% if (user) { %>
+        <div class="d-flex">
+          <a href="/chat" class="btn btn-outline-light me-2">
+            <i class="fas fa-comments"></i> Chat
+          </a>
+          <span class="text-white me-3"><%= user.name %></span>
+          <a href="/logout" class="btn btn-outline-light">Sair</a>
+        </div>
+      <% } %>
+    </div>
+  </header>
