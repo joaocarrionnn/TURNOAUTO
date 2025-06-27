@@ -1,121 +1,194 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <%- include('partials/head', {title: 'Dashboard'}); %>
+  <%- include('partials/head', {title: 'Dashboard'}); %>
+  <!-- Adicione o Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .animate-fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gray-50">
   <%- include('partials/header', {user: user}); %>
   
-  <main class="container my-4">
-    <h1 class="mb-4">Resumo do Turno</h1>
+  <main class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Resumo do Turno</h1>
+      <p class="text-gray-500"><%= new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }) %></p>
+    </div>
     
-    <div class="row">
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Ocorrências</h5>
-            <p class="display-6"><%= typeof totalOcorrencias !== 'undefined' ? totalOcorrencias : 0 %></p>
-            <a href="/ocorrencias" class="btn btn-outline-primary">Ver todas</a>
+    <!-- Cards de Resumo -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Card Ocorrências -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in hover:shadow-lg transition-shadow duration-300">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Ocorrências</h3>
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
           </div>
+          <p class="text-4xl font-bold text-gray-800 mb-2"><%= typeof totalOcorrencias !== 'undefined' ? totalOcorrencias : 0 %></p>
+          <a href="/ocorrencias" class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors">
+            Ver todas
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </div>
-      
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Checklist Pendente</h5>
-            <p class="display-6">
-              <% 
-                const totalItens = 6; // Total de itens do checklist
-                let itensConcluidos = 0;
-                
-                if (checklist) {
-                  itensConcluidos = [
-                    checklist.epi1, 
-                    checklist.epi2, 
-                    checklist.maq1, 
-                    checklist.maq2, 
-                    checklist.area1, 
-                    checklist.area2
-                  ].filter(Boolean).length;
-                }
-              %>
-              <%= itensConcluidos %>/<%= totalItens %>
-            </p>
-            <a href="/checklist" class="btn btn-outline-primary">
-              <%= checklist ? 'Atualizar' : 'Completar' %>
-            </a>
+
+      <!-- Card Checklist -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in hover:shadow-lg transition-shadow duration-300">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Checklist</h3>
+            <div class="p-3 rounded-full bg-green-100 text-green-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
           </div>
+          <% 
+            const totalItens = 6;
+            let itensConcluidos = 0;
+            
+            if (checklist) {
+              itensConcluidos = [
+                checklist.epi1, 
+                checklist.epi2, 
+                checklist.maq1, 
+                checklist.maq2, 
+                checklist.area1, 
+                checklist.area2
+              ].filter(Boolean).length;
+            }
+            
+            const progresso = Math.round((itensConcluidos / totalItens) * 100);
+          %>
+          <p class="text-4xl font-bold text-gray-800 mb-2"><%= itensConcluidos %>/<%= totalItens %></p>
+          <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+            <div class="bg-green-600 h-2.5 rounded-full" style="width: <%= progresso %>%"></div>
+          </div>
+          <a href="/checklist" class="inline-flex items-center text-green-600 hover:text-green-800 transition-colors">
+            <%= checklist ? 'Atualizar' : 'Completar' %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </div>
-      
-      <div class="col-md-4 mb-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">Alertas</h5>
-            <p class="display-6"><%= alertas || 0 %></p>
-            <a href="/alertas" class="btn btn-outline-danger">Ver alertas</a>
+
+      <!-- Card Alertas -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in hover:shadow-lg transition-shadow duration-300">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Alertas</h3>
+            <div class="p-3 rounded-full bg-red-100 text-red-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
           </div>
+          <p class="text-4xl font-bold text-gray-800 mb-2"><%= alertas || 0 %></p>
+          <a href="/alertas" class="inline-flex items-center text-red-600 hover:text-red-800 transition-colors">
+            Ver alertas
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
-    
-    <div class="card mb-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Últimas Ocorrências</h5>
-        <a href="/ocorrencias/nova" class="btn btn-sm btn-primary">Nova Ocorrência</a>
+
+    <!-- Tabela de Ocorrências -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden animate-fade-in">
+      <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-800">Últimas Ocorrências</h2>
+        <a href="/ocorrencias/nova" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Nova Ocorrência
+        </a>
       </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Data</th>
-                <th>Tipo</th>
-                <th>Descrição</th>
-                <th>Urgência</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% if (ocorrencias && ocorrencias.length > 0) { %>
-                <% ocorrencias.forEach(ocorrencia => { %>
-                  <tr>
-                    <td><%= new Date(ocorrencia.data_criacao).toLocaleDateString('pt-BR') %></td>
-                    <td><%= ocorrencia.tipo %></td>
-                    <td><%= ocorrencia.descricao.substring(0, 50) %><%= ocorrencia.descricao.length > 50 ? '...' : '' %></td>
-                    <td>
-                      <% if (ocorrencia.urgencia === 'alta') { %>
-                        <span class="badge bg-danger"><%= ocorrencia.urgencia %></span>
-                      <% } else if (ocorrencia.urgencia === 'media') { %>
-                        <span class="badge bg-warning text-dark"><%= ocorrencia.urgencia %></span>
-                      <% } else { %>
-                        <span class="badge bg-success"><%= ocorrencia.urgencia %></span>
-                      <% } %>
-                    </td>
-                    <td>
-                      <% if (ocorrencia.status === 'pendente') { %>
-                        <span class="badge bg-warning text-dark"><%= ocorrencia.status %></span>
-                      <% } else if (ocorrencia.status === 'em_andamento') { %>
-                        <span class="badge bg-info"><%= ocorrencia.status %></span>
-                      <% } else { %>
-                        <span class="badge bg-success"><%= ocorrencia.status %></span>
-                      <% } %>
-                    </td>
-                  </tr>
-                <% }); %>
-              <% } else { %>
-                <tr>
-                  <td colspan="5" class="text-center">Nenhuma ocorrência registrada</td>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descrição</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Urgência</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if (ocorrencias && ocorrencias.length > 0) { %>
+              <% ocorrencias.forEach(ocorrencia => { %>
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= new Date(ocorrencia.data_criacao).toLocaleDateString('pt-BR') %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <%= ocorrencia.tipo %>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-gray-500">
+                    <%= ocorrencia.descricao.substring(0, 50) %><%= ocorrencia.descricao.length > 50 ? '...' : '' %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if (ocorrencia.urgencia === 'alta') { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        <%= ocorrencia.urgencia %>
+                      </span>
+                    <% } else if (ocorrencia.urgencia === 'media') { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        <%= ocorrencia.urgencia %>
+                      </span>
+                    <% } else { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        <%= ocorrencia.urgencia %>
+                      </span>
+                    <% } %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if (ocorrencia.status === 'pendente') { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        <%= ocorrencia.status %>
+                      </span>
+                    <% } else if (ocorrencia.status === 'em_andamento') { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                        <%= ocorrencia.status %>
+                      </span>
+                    <% } else { %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        <%= ocorrencia.status %>
+                      </span>
+                    <% } %>
+                  </td>
                 </tr>
-              <% } %>
-            </tbody>
-          </table>
-        </div>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                  Nenhuma ocorrência registrada
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
       </div>
     </div>
   </main>
-  
+
   <%- include('partials/footer'); %>
   <script src="/js/script.js"></script>
 </body>
