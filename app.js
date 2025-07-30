@@ -50,14 +50,25 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+
+// Middleware para verificar se é admin
+const requireAdmin = (req, res, next) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    next();
+  } else {
+    res.status(403).send('Acesso negado');
+  }
+};
+
 function renderDashboardWithDefaults(res, user) {
   res.render('dashboard', {
     title: 'Dashboard',
     user: user,
     totalOcorrencias: 0,
+    totalAlertasAtivos: 0, // Valor padrão
     ocorrencias: [],
     checklist: null,
-    alertas: 0
+    alertas: 0 // Mantendo a variável original também, para compatibilidade
   });
 }
 
@@ -81,33 +92,75 @@ app.get('/', requireAuth, (req, res) => {
 
         const checklist = checklistResults.length > 0 ? checklistResults[0] : null;
         
-        // Continua com as outras consultas (ocorrências, etc)
+        // Busca o total de ocorrências (de todos os usuários)
         db.query(
-          'SELECT COUNT(*) as total FROM ocorrencias WHERE user_id = ?',
-          [req.session.user.id],
+          'SELECT COUNT(*) as total FROM ocorrencias',
           (err, countResults) => {
             if (err) {
               console.error('Erro ao contar ocorrências:', err);
               return renderDashboardWithDefaults(res, req.session.user);
             }
 
+            // Busca o total de alertas ativos
             db.query(
-              'SELECT * FROM ocorrencias WHERE user_id = ? ORDER BY data_criacao DESC LIMIT 5',
-              [req.session.user.id],
-              (err, ocorrenciasResults) => {
+              'SELECT COUNT(*) as total FROM alertas WHERE status = "ativo"',
+              (err, alertasResults) => {
                 if (err) {
-                  console.error('Erro ao buscar ocorrências:', err);
-                  return renderDashboardWithDefaults(res, req.session.user);
+                  console.error('Erro ao contar alertas:', err);
+                  // Passa 0 como valor padrão se houver erro
+                  const totalAlertasAtivos = 0;
+                  
+                  // Busca as últimas 5 ocorrências (de todos os usuários)
+                  db.query(
+                    `SELECT o.*, u.name as user_name 
+                     FROM ocorrencias o
+                     JOIN users u ON o.user_id = u.id
+                     ORDER BY o.data_criacao DESC LIMIT 5`,
+                    (err, ocorrenciasResults) => {
+                      if (err) {
+                        console.error('Erro ao buscar ocorrências:', err);
+                        return renderDashboardWithDefaults(res, req.session.user);
+                      }
+
+                      res.render('dashboard', {
+                        title: 'Dashboard',
+                        user: req.session.user,
+                        totalOcorrencias: countResults[0].total,
+                        totalAlertasAtivos: totalAlertasAtivos,
+                        ocorrencias: ocorrenciasResults || [],
+                        checklist: checklist,
+                        alertas: totalAlertasAtivos // Mantendo compatibilidade
+                      });
+                    }
+                  );
+                  return;
                 }
 
-                res.render('dashboard', {
-                  title: 'Dashboard',
-                  user: req.session.user,
-                  totalOcorrencias: countResults[0].total,
-                  ocorrencias: ocorrenciasResults || [],
-                  checklist: checklist,
-                  alertas: 2
-                });
+                const totalAlertasAtivos = alertasResults[0].total;
+                
+                // Busca as últimas 5 ocorrências (de todos os usuários)
+                db.query(
+                  `SELECT o.*, u.name as user_name 
+                   FROM ocorrencias o
+                   JOIN users u ON o.user_id = u.id
+                   ORDER BY o.data_criacao DESC LIMIT 5`,
+                  (err, ocorrenciasResults) => {
+                    if (err) {
+                      console.error('Erro ao buscar ocorrências:', err);
+                      return renderDashboardWithDefaults(res, req.session.user);
+                    }
+
+                    res.render('dashboard', {
+                      title: 'Dashboard',
+                      user: req.session.user,
+                      totalOcorrencias: countResults[0].total,
+                      totalAlertasAtivos: totalAlertasAtivos,
+                      ocorrencias: ocorrenciasResults || [],
+                      checklist: checklist,
+                      alertas: totalAlertasAtivos // Mantendo compatibilidade
+                    });
+                  }
+                );
               }
             );
           }
@@ -119,7 +172,6 @@ app.get('/', requireAuth, (req, res) => {
     renderDashboardWithDefaults(res, req.session.user);
   }
 });
-
 
 app.get('/login', (req, res) => {
   if (req.session.user) {
@@ -140,7 +192,7 @@ app.post('/login', (req, res) => {
       return res.render('auth/login', {
         title: 'Login',
         error: 'Erro no servidor. Tente novamente mais tarde.',
-        email: email // Mantém o email preenchido
+        email: email
       });
     }
     
@@ -148,7 +200,7 @@ app.post('/login', (req, res) => {
       return res.render('auth/login', {
         title: 'Login',
         error: 'Email ou senha incorretos',
-        email: email // Mantém o email preenchido
+        email: email
       });
     }
     
@@ -159,14 +211,15 @@ app.post('/login', (req, res) => {
         return res.render('auth/login', {
           title: 'Login',
           error: 'Email ou senha incorretos',
-          email: email // Mantém o email preenchido
+          email: email
         });
       }
       
       req.session.user = {
         id: user.id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role // Adicione esta linha
       };
       
       res.redirect('/');
@@ -212,10 +265,10 @@ app.post('/register', (req, res) => {
         return res.redirect('/register?error=Erro no servidor');
       }
       
-      // Inserir novo usuário
+      // Inserir novo usuário (padrão como 'user')
       db.query(
-        'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-        [name, email, hash],
+        'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
+        [name, email, hash, 'user'],
         (err, results) => {
           if (err) {
             return res.redirect('/register?error=Erro ao cadastrar usuário');
@@ -269,8 +322,10 @@ app.get('/', requireAuth, (req, res) => {
 
 app.get('/ocorrencias', requireAuth, (req, res) => {
   db.query(
-    'SELECT * FROM ocorrencias WHERE user_id = ? ORDER BY data_criacao DESC',
-    [req.session.user.id],
+    `SELECT o.*, u.name as user_name 
+     FROM ocorrencias o
+     JOIN users u ON o.user_id = u.id
+     ORDER BY o.data_criacao DESC`,
     (err, results) => {
       if (err) {
         console.error(err);
@@ -329,21 +384,27 @@ app.get('/ocorrencias/nova', requireAuth, (req, res) => {
   });
 });
 
-// Rota para exibir o formulário de edição
 app.get('/ocorrencias/editar/:id', requireAuth, (req, res) => {
   db.query(
-    'SELECT * FROM ocorrencias WHERE id = ? AND user_id = ?',
-    [req.params.id, req.session.user.id],
+    'SELECT * FROM ocorrencias WHERE id = ?',
+    [req.params.id],
     (err, results) => {
       if (err || results.length === 0) {
         console.error(err);
         return res.redirect('/ocorrencias?error=Ocorrência não encontrada');
       }
       
+      const ocorrencia = results[0];
+      
+      // Verifica se o usuário é o criador ou admin
+      if (ocorrencia.user_id !== req.session.user.id && req.session.user.role !== 'admin') {
+        return res.redirect('/ocorrencias?error=Você não tem permissão para editar esta ocorrência');
+      }
+      
       res.render('ocorrencias/editar', {
         title: 'Editar Ocorrência',
         user: req.session.user,
-        ocorrencia: results[0]
+        ocorrencia: ocorrencia
       });
     }
   );
@@ -352,66 +413,131 @@ app.get('/ocorrencias/editar/:id', requireAuth, (req, res) => {
 // Rota para processar a edição
 app.post('/ocorrencias/editar/:id', requireAuth, upload.single('imagem'), (req, res) => {
   const { tipo, descricao, urgencia, status } = req.body;
-  const userId = req.session.user.id;
   const ocorrenciaId = req.params.id;
   
-  let imagemPath = null;
-  if (req.file) {
-    imagemPath = '/uploads/' + req.file.filename;
-  }
-
-  // Se não enviou nova imagem, mantém a existente
-  let query;
-  let params;
-  
-  if (imagemPath) {
-    query = 'UPDATE ocorrencias SET tipo = ?, descricao = ?, urgencia = ?, imagem = ?, status = ? WHERE id = ? AND user_id = ?';
-    params = [tipo, descricao, urgencia, imagemPath, status, ocorrenciaId, userId];
-  } else {
-    query = 'UPDATE ocorrencias SET tipo = ?, descricao = ?, urgencia = ?, status = ? WHERE id = ? AND user_id = ?';
-    params = [tipo, descricao, urgencia, status, ocorrenciaId, userId];
-  }
-
-  db.query(query, params, (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.render('ocorrencias/editar', {
-        title: 'Editar Ocorrência',
-        user: req.session.user,
-        ocorrencia: req.body,
-        error: 'Erro ao atualizar ocorrência'
-      });
-    }
-    
-    res.redirect('/ocorrencias?success=Ocorrência atualizada com sucesso');
-  });
-});
-
-// Rota para exibir o checklist
-app.get('/checklist', requireAuth, (req, res) => {
-  // Verifica se já existe um checklist hoje
-  const hoje = new Date().toISOString().split('T')[0];
-  
+  // Primeiro verifica se o usuário pode editar
   db.query(
-    'SELECT * FROM checklists WHERE user_id = ? AND DATE(data_criacao) = ?',
-    [req.session.user.id, hoje],
+    'SELECT user_id FROM ocorrencias WHERE id = ?',
+    [ocorrenciaId],
     (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Erro ao carregar checklist');
+      if (err || results.length === 0) {
+        return res.redirect('/ocorrencias?error=Ocorrência não encontrada');
+      }
+      
+      if (results[0].user_id !== req.session.user.id && req.session.user.role !== 'admin') {
+        return res.redirect('/ocorrencias?error=Você não tem permissão para editar esta ocorrência');
+      }
+      
+      // Continua com a edição...
+      let imagemPath = null;
+      if (req.file) {
+        imagemPath = '/uploads/' + req.file.filename;
       }
 
-      const checklist = results.length > 0 ? results[0] : null;
+      let query;
+      let params;
       
-      res.render('checklist', {
-        title: 'Checklist',
-        user: req.session.user,
-        checklist: checklist
+      if (imagemPath) {
+        query = 'UPDATE ocorrencias SET tipo = ?, descricao = ?, urgencia = ?, imagem = ?, status = ? WHERE id = ?';
+        params = [tipo, descricao, urgencia, imagemPath, status, ocorrenciaId];
+      } else {
+        query = 'UPDATE ocorrencias SET tipo = ?, descricao = ?, urgencia = ?, status = ? WHERE id = ?';
+        params = [tipo, descricao, urgencia, status, ocorrenciaId];
+      }
+
+      db.query(query, params, (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.render('ocorrencias/editar', {
+            title: 'Editar Ocorrência',
+            user: req.session.user,
+            ocorrencia: req.body,
+            error: 'Erro ao atualizar ocorrência'
+          });
+        }
+        
+        res.redirect('/ocorrencias?success=Ocorrência atualizada com sucesso');
       });
     }
   );
 });
 
+// Rota para exibir o checklist
+app.get('/checklist', requireAuth, (req, res) => {
+  if (req.session.user.role === 'admin') {
+    // Lógica para admin ver todos os checklists
+    const hoje = new Date().toISOString().split('T')[0];
+    
+    db.query(
+      `SELECT u.id as user_id, u.name as user_name, 
+              c.id as checklist_id, c.data_criacao,
+              c.epi1, c.epi2, c.maq1, c.maq2, c.area1, c.area2, c.observacoes
+       FROM users u
+       LEFT JOIN checklists c ON u.id = c.user_id AND DATE(c.data_criacao) = ?
+       WHERE u.role = 'user'
+       ORDER BY u.name`,
+      [hoje],
+      (err, results) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('Erro ao carregar checklists');
+        }
+
+        // Processar resultados para agrupar por usuário
+        const usersChecklists = {};
+        results.forEach(row => {
+          if (!usersChecklists[row.user_id]) {
+            usersChecklists[row.user_id] = {
+              user_id: row.user_id,
+              user_name: row.user_name,
+              checklists: [],
+              total: 0,
+              concluidos: 0
+            };
+          }
+          
+          if (row.checklist_id) {
+            usersChecklists[row.user_id].checklists.push(row);
+            usersChecklists[row.user_id].total = 6; // Total de itens
+            const concluidos = [
+              row.epi1, row.epi2, row.maq1, row.maq2, row.area1, row.area2
+            ].filter(Boolean).length;
+            usersChecklists[row.user_id].concluidos += concluidos;
+          }
+        });
+
+        res.render('admin-checklist', {
+          title: 'Checklists dos Usuários',
+          user: req.session.user,
+          usersChecklists: Object.values(usersChecklists),
+          hoje: hoje
+        });
+      }
+    );
+  } else {
+    // Lógica original para usuários normais
+    const hoje = new Date().toISOString().split('T')[0];
+    
+    db.query(
+      'SELECT * FROM checklists WHERE user_id = ? AND DATE(data_criacao) = ?',
+      [req.session.user.id, hoje],
+      (err, results) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('Erro ao carregar checklist');
+        }
+
+        const checklist = results.length > 0 ? results[0] : null;
+        
+        res.render('checklist', {
+          title: 'Checklist',
+          user: req.session.user,
+          checklist: checklist
+        });
+      }
+    );
+  }
+});
 // Rota para salvar o checklist
 app.post('/checklist', requireAuth, (req, res) => {
   const { epi1, epi2, maq1, maq2, area1, area2, observacoes } = req.body;
@@ -471,11 +597,126 @@ app.get('/conhecimento', requireAuth, (req, res) => {
   });
 });
 
+// Adicione estas rotas no app.js
+
+// Rota para listar alertas (acessível a todos os usuários autenticados)
 app.get('/alertas', requireAuth, (req, res) => {
-  res.render('alertas', { 
-    title: 'Alertas',
+  db.query(
+    `SELECT a.*, u.name as user_name 
+     FROM alertas a
+     JOIN users u ON a.user_id = u.id
+     ORDER BY a.data_criacao DESC`,
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).render('alertas', {
+          title: 'Alertas',
+          user: req.session.user,
+          alertas: [], // Passa array vazio em caso de erro
+          error: 'Erro ao carregar alertas'
+        });
+      }
+
+      res.render('alertas', {
+        title: 'Alertas',
+        user: req.session.user,
+        alertas: results || [], // Garante que sempre tenha um valor
+        error: req.query.error,
+        success: req.query.success
+      });
+    }
+  );
+});
+
+// Rota para exibir formulário de novo alerta (apenas admin)
+app.get('/alertas/novo', requireAdmin, (req, res) => {
+  res.render('alertas/novo', {
+    title: 'Novo Alerta',
     user: req.session.user
   });
+});
+
+// Rota para criar novo alerta (apenas admin)
+app.post('/alertas', requireAdmin, (req, res) => {
+  const { titulo, descricao, tipo, severidade } = req.body;
+  const userId = req.session.user.id;
+
+  db.query(
+    'INSERT INTO alertas (user_id, titulo, descricao, tipo, severidade) VALUES (?, ?, ?, ?, ?)',
+    [userId, titulo, descricao, tipo, severidade],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.render('alertas/novo', {
+          title: 'Novo Alerta',
+          user: req.session.user,
+          error: 'Erro ao criar alerta',
+          formData: req.body
+        });
+      }
+      res.redirect('/alertas?success=Alerta criado com sucesso');
+    }
+  );
+});
+
+// Rota para exibir formulário de edição (apenas admin)
+app.get('/alertas/editar/:id', requireAdmin, (req, res) => {
+  db.query(
+    'SELECT * FROM alertas WHERE id = ?',
+    [req.params.id],
+    (err, results) => {
+      if (err || results.length === 0) {
+        console.error(err);
+        return res.redirect('/alertas?error=Alerta não encontrado');
+      }
+      
+      res.render('alertas/editar', {
+        title: 'Editar Alerta',
+        user: req.session.user,
+        alerta: results[0]
+      });
+    }
+  );
+});
+
+// Rota para atualizar alerta (apenas admin)
+app.post('/alertas/editar/:id', requireAdmin, (req, res) => {
+  const { titulo, descricao, tipo, severidade, status } = req.body;
+  const alertaId = req.params.id;
+
+  db.query(
+    'UPDATE alertas SET titulo = ?, descricao = ?, tipo = ?, severidade = ?, status = ? WHERE id = ?',
+    [titulo, descricao, tipo, severidade, status, alertaId],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.render('alertas/editar', {
+          title: 'Editar Alerta',
+          user: req.session.user,
+          alerta: req.body,
+          error: 'Erro ao atualizar alerta'
+        });
+      }
+      
+      res.redirect('/alertas?success=Alerta atualizado com sucesso');
+    }
+  );
+});
+
+// Rota para excluir alerta (apenas admin)
+app.post('/alertas/excluir/:id', requireAdmin, (req, res) => {
+  db.query(
+    'DELETE FROM alertas WHERE id = ?',
+    [req.params.id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.redirect('/alertas?error=Erro ao excluir alerta');
+      }
+      
+      res.redirect('/alertas?success=Alerta excluído com sucesso');
+    }
+  );
 });
 
 // Rota principal do chat
@@ -692,6 +933,129 @@ app.get('/chat/verificar-mensagens/:conversa_id', requireAuth, (req, res) => {
       }
       
       res.json(results);
+    }
+  );
+});
+
+// Rota para admin ver detalhes do checklist de um usuário
+app.get('/admin/checklist/:user_id', requireAdmin, (req, res) => {
+  const hoje = new Date().toISOString().split('T')[0];
+  
+  db.query(
+    `SELECT u.name as user_name, c.* 
+     FROM checklists c
+     JOIN users u ON c.user_id = u.id
+     WHERE c.user_id = ? AND DATE(c.data_criacao) = ?`,
+    [req.params.user_id, hoje],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Erro ao carregar checklist');
+      }
+
+      if (results.length === 0) {
+        // Buscar apenas o nome do usuário
+        db.query(
+          'SELECT name as user_name FROM users WHERE id = ?',
+          [req.params.user_id],
+          (err, userResults) => {
+            if (err || userResults.length === 0) {
+              return res.status(404).send('Usuário não encontrado');
+            }
+            
+            res.render('checklist', {
+              title: 'Checklist de ' + userResults[0].user_name,
+              user: req.session.user,
+              checklist: null,
+              isAdminView: true,
+              viewedUser: userResults[0]
+            });
+          }
+        );
+      } else {
+        res.render('checklist', {
+          title: 'Checklist de ' + results[0].user_name,
+          user: req.session.user,
+          checklist: results[0],
+          isAdminView: true,
+          viewedUser: { user_name: results[0].user_name }
+        });
+      }
+    }
+  );
+});
+
+
+// Painel de administração
+app.get('/admin', requireAdmin, (req, res) => {
+  res.render('admin/dashboard', {
+    title: 'Painel de Administração',
+    user: req.session.user
+  });
+});
+
+
+// Rota para promover usuário a admin (acessível apenas por admins)
+app.post('/admin/promote/:user_id', requireAdmin, (req, res) => {
+  db.query(
+    'UPDATE users SET role = "admin" WHERE id = ?',
+    [req.params.user_id],
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: 'Erro ao promover usuário' });
+      }
+      
+      res.json({ success: true });
+    }
+  );
+});
+
+
+// Rota para listar usuários (admin)
+app.get('/admin/usuarios', requireAdmin, (req, res) => {
+  db.query(
+    'SELECT id, name, email, role FROM users ORDER BY name',
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Erro ao carregar usuários');
+      }
+      
+      res.render('admin/usuarios', {
+        title: 'Gerenciar Usuários',
+        user: req.session.user,
+        usuarios: results
+      });
+    }
+  );
+});
+
+// Rota para admin ver todas as ocorrências
+app.get('/admin/ocorrencias', requireAdmin, (req, res) => {
+  db.query(
+    `SELECT o.*, u.name as user_name 
+     FROM ocorrencias o
+     JOIN users u ON o.user_id = u.id
+     ORDER BY o.data_criacao DESC`,
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).render('admin/ocorrencias', {
+          title: 'Todas as Ocorrências',
+          user: req.session.user,
+          ocorrencias: [],
+          error: 'Erro ao carregar ocorrências'
+        });
+      }
+
+      res.render('admin/ocorrencias', {
+        title: 'Todas as Ocorrências',
+        user: req.session.user,
+        ocorrencias: results,
+        error: req.query.error,
+        success: req.query.success
+      });
     }
   );
 });

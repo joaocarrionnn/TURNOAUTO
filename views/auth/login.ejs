@@ -1,74 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <%- include('../partials/head', {title: 'Login'}); %>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'custom-blue': '#2F76BD',
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    .auth-container {
-      background-color: #2c3e50;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+    .toggle-password {
+      transition: all 0.3s ease;
     }
-    
+    .toggle-password:hover {
+      opacity: 0.8;
+    }
     .auth-card {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-    
-    .auth-title {
-      color: #2c3e50;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    
-    .auth-footer {
-      text-align: center;
-      margin-top: 1.5rem;
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.88);
     }
   </style>
 </head>
-<body class="auth-body">
-  <div class="auth-container">
-    <div class="auth-card">
-      <h2 class="auth-title">Login</h2>
+<body class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+  <div class="auth-card w-full max-w-md rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="p-8">
+      <div class="flex justify-center mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-custom-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+        </svg>
+      </div>
+      
+      <h2 class="text-2xl font-medium text-custom-blue text-center mb-8">Acesse sua conta</h2>
+      
       <% if (error) { %>
-        <div class="alert alert-danger"><%= error %></div>
+        <div class="mb-6 p-3 rounded-lg bg-red-50 border border-red-200 text-red-600 text-sm flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <%= error %>
+        </div>
       <% } %>
 
       <% if (typeof success !== 'undefined') { %>
-        <div class="alert alert-success"><%= success %></div>
-      <% } %>
-      <form action="/login" method="POST">
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" class="form-control" id="email" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" required>
+        <div class="mb-6 p-3 rounded-lg bg-green-50 border border-green-200 text-green-600 text-sm flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+          <%= success %>
         </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Senha</label>
-          <div class="input-group">
-            <input type="password" class="form-control" id="password" name="password" required>
-            <button class="btn btn-outline-secondary toggle-password" type="button" toggle="#password">
+      <% } %>
+
+      <form action="/login" method="POST" class="space-y-5">
+        <div>
+          <label for="email" class="block text-sm font-medium text-custom-blue mb-1">Email</label>
+          <input 
+            type="email" 
+            id="email"
+            name="email" 
+            value="<%= typeof email !== 'undefined' ? email : '' %>" 
+            placeholder="exe@email.com" 
+            class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-1 focus:ring-custom-blue focus:border-custom-blue outline-none transition-all text-gray-700 placeholder-gray-400"
+            required
+          />
+        </div>
+        
+        <div>
+          <label for="password" class="block text-sm font-medium text-custom-blue mb-1">Senha</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="password"
+              name="password" 
+              placeholder="••••••••" 
+              class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-1 focus:ring-custom-blue focus:border-custom-blue outline-none transition-all text-gray-700 placeholder-gray-400 pr-10"
+              required
+            />
+            <button 
+              type="button" 
+              class="absolute inset-y-0 right-0 px-3 flex items-center toggle-password text-gray-500 hover:text-custom-blue"
+              toggle="#password"
+            >
               <i class="fas fa-eye"></i>
             </button>
           </div>
+          <div class="mt-1 text-right">
+            <a href="/forgot-password" class="text-xs text-gray-500 hover:text-custom-blue hover:underline">Esqueceu a senha?</a>
+          </div>
         </div>
         
-        <button type="submit" class="btn btn-primary w-100 py-2">Entrar</button>
+        <button type="submit" class="w-full py-3 px-4 rounded-lg bg-custom-blue hover:bg-[#1d7a9a] text-white font-medium transition-all flex items-center justify-center">
+          Entrar
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
       </form>
-      <div class="auth-footer">
-        <p class="mb-0">Não tem uma conta? <a href="/register">Cadastre-se</a></p>
+
+      <div class="mt-8 text-center text-sm text-gray-600">
+        Não tem uma conta? <a href="/register" class="font-medium text-custom-blue hover:underline">Cadastre-se</a>
       </div>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/js/script.js"></script>
 
   <script>
     document.querySelectorAll('.toggle-password').forEach(button => {

@@ -2,20 +2,30 @@
 <html lang="pt-BR">
 <head>
   <%- include('partials/head', {title: 'Checklist de Segurança'}); %>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
   <%- include('partials/header', {user: user}); %>
+
+  <% const isAdminView = locals.isAdminView ? locals.isAdminView : false; %>
+  <% const viewedUser = locals.viewedUser ? locals.viewedUser : null; %>
   
   <main class="container my-4">
     <h1 class="mb-4">Checklist de Segurança</h1>
     
-    <% if (typeof success !== 'undefined' && success) { %>
+    <% if (locals.success) { %>
       <div class="alert alert-success"><%= success %></div>
     <% } %>
     
     <div class="card">
       <div class="card-header">
-        <h5>Checklist do Turno</h5>
+        <h5>
+          <% if (isAdminView) { %>
+            Checklist de <%= viewedUser.user_name %>
+          <% } else { %>
+            Checklist do Turno
+          <% } %>
+        </h5>
       </div>
       <div class="card-body">
         <form action="/checklist" method="POST">
