@@ -2,75 +2,249 @@
 <html lang="pt-BR">
 <head>
   <%- include('partials/head', {title: 'Checklist de Segurança'}); %>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              500: '#3b82f6',
+              600: '#2563eb',
+            },
+            success: {
+              500: '#10b981',
+              600: '#059669',
+            },
+            danger: {
+              500: '#ef4444',
+              600: '#dc2626',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .checklist-item {
+      transition: all 0.2s ease;
+    }
+    .checklist-item:hover {
+      transform: translateX(5px);
+    }
+    .checklist-card {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    .custom-checkbox {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 1.2em;
+      height: 1.2em;
+      border: 2px solid #d1d5db;
+      border-radius: 0.25em;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .custom-checkbox:checked {
+      background-color: #3b82f6;
+      border-color: #3b82f6;
+      background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+      background-size: 100% 100%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    
+    @media (max-width: 640px) {
+      .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .section-icon {
+        margin-right: 0.75rem;
+      }
+      .checklist-content {
+        padding-left: 2.5rem !important;
+      }
+    }
+  </style>
 </head>
-<body>
+<body class="bg-gray-50">
   <%- include('partials/header', {user: user}); %>
 
   <% const isAdminView = locals.isAdminView ? locals.isAdminView : false; %>
   <% const viewedUser = locals.viewedUser ? locals.viewedUser : null; %>
   
-  <main class="container my-4">
-    <h1 class="mb-4">Checklist de Segurança</h1>
+  <main class="container mx-auto px-4 py-6 sm:py-8 max-w-4xl">
+    <div class="header-flex flex justify-between items-start sm:items-center mb-6 sm:mb-8">
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+        <i class="fas fa-clipboard-check text-primary-500 mr-2"></i> Checklist de Segurança
+      </h1>
+      
+      <% if (locals.success) { %>
+        <div class="bg-success-100 border-l-4 border-success-500 text-success-700 p-3 sm:p-4 rounded-md shadow-sm text-sm sm:text-base">
+          <i class="fas fa-check-circle mr-2"></i> <%= success %>
+        </div>
+      <% } %>
+    </div>
     
-    <% if (locals.success) { %>
-      <div class="alert alert-success"><%= success %></div>
-    <% } %>
-    
-    <div class="card">
-      <div class="card-header">
-        <h5>
+    <div class="bg-white checklist-card rounded-xl overflow-hidden">
+      <div class="bg-gradient-to-r from-primary-500 to-primary-600 px-4 sm:px-6 py-3 sm:py-4">
+        <h2 class="text-lg sm:text-xl font-semibold text-white">
           <% if (isAdminView) { %>
-            Checklist de <%= viewedUser.user_name %>
+            <i class="fas fa-user-shield mr-2"></i> Checklist de <%= viewedUser.user_name %>
           <% } else { %>
-            Checklist do Turno
+            <i class="fas fa-clipboard-list mr-2"></i> Checklist do Turno
           <% } %>
-        </h5>
+        </h2>
       </div>
-      <div class="card-body">
-        <form action="/checklist" method="POST">
-          <div class="mb-4">
-            <h6 class="mb-3">Equipamentos de Proteção Individual</h6>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="epi1" name="epi1" <%= checklist && checklist.epi1 ? 'checked' : '' %>>
-              <label class="form-check-label" for="epi1">Todos os colaboradores utilizando EPIs adequados</label>
+      
+      <div class="p-4 sm:p-6">
+        <form action="/checklist" method="POST" class="space-y-4 sm:space-y-6">
+          <!-- Seção EPIs -->
+          <div class="border border-gray-200 rounded-lg p-3 sm:p-5 bg-gray-50">
+            <div class="flex items-center mb-3 sm:mb-4">
+              <div class="bg-primary-100 p-2 rounded-full section-icon mr-2 sm:mr-3">
+                <i class="fas fa-hard-hat text-primary-600 text-lg sm:text-xl"></i>
+              </div>
+              <h3 class="text-base sm:text-lg font-semibold text-gray-800">Equipamentos de Proteção Individual</h3>
             </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="epi2" name="epi2" <%= checklist && checklist.epi2 ? 'checked' : '' %>>
-              <label class="form-check-label" for="epi2">EPIs em bom estado de conservação</label>
+            
+            <div class="space-y-2 sm:space-y-3 checklist-content pl-12 sm:pl-14">
+              <div class="checklist-item flex items-start">
+                <input 
+                  type="checkbox" 
+                  id="epi1" 
+                  name="epi1" 
+                  class="custom-checkbox mt-1 mr-2 sm:mr-3 cursor-pointer"
+                  <%= checklist && checklist.epi1 ? 'checked' : '' %>
+                >
+                <label for="epi1" class="text-gray-700 cursor-pointer text-sm sm:text-base">
+                  <span class="font-medium">Todos os colaboradores utilizando EPIs adequados</span>
+                  <p class="text-xs sm:text-sm text-gray-500 mt-1">Verifique se todos estão com os EPIs necessários para suas atividades</p>
+                </label>
+              </div>
+              
+              <div class="checklist-item flex items-start">
+                <input 
+                  type="checkbox" 
+                  id="epi2" 
+                  name="epi2" 
+                  class="custom-checkbox mt-1 mr-2 sm:mr-3 cursor-pointer"
+                  <%= checklist && checklist.epi2 ? 'checked' : '' %>
+                >
+                <label for="epi2" class="text-gray-700 cursor-pointer text-sm sm:text-base">
+                  <span class="font-medium">EPIs em bom estado de conservação</span>
+                  <p class="text-xs sm:text-sm text-gray-500 mt-1">Inspecione se há danos ou desgaste excessivo nos equipamentos</p>
+                </label>
+              </div>
             </div>
           </div>
           
-          <div class="mb-4">
-            <h6 class="mb-3">Equipamentos e Máquinas</h6>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="maq1" name="maq1" <%= checklist && checklist.maq1 ? 'checked' : '' %>>
-              <label class="form-check-label" for="maq1">Todos os equipamentos com proteções instaladas</label>
+          <!-- Seção Máquinas -->
+          <div class="border border-gray-200 rounded-lg p-3 sm:p-5 bg-gray-50">
+            <div class="flex items-center mb-3 sm:mb-4">
+              <div class="bg-primary-100 p-2 rounded-full section-icon mr-2 sm:mr-3">
+                <i class="fas fa-cogs text-primary-600 text-lg sm:text-xl"></i>
+              </div>
+              <h3 class="text-base sm:text-lg font-semibold text-gray-800">Equipamentos e Máquinas</h3>
             </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="maq2" name="maq2" <%= checklist && checklist.maq2 ? 'checked' : '' %>>
-              <label class="form-check-label" for="maq2">Sinalização de segurança visível</label>
+            
+            <div class="space-y-2 sm:space-y-3 checklist-content pl-12 sm:pl-14">
+              <div class="checklist-item flex items-start">
+                <input 
+                  type="checkbox" 
+                  id="maq1" 
+                  name="maq1" 
+                  class="custom-checkbox mt-1 mr-2 sm:mr-3 cursor-pointer"
+                  <%= checklist && checklist.maq1 ? 'checked' : '' %>
+                >
+                <label for="maq1" class="text-gray-700 cursor-pointer text-sm sm:text-base">
+                  <span class="font-medium">Todos os equipamentos com proteções instaladas</span>
+                  <p class="text-xs sm:text-sm text-gray-500 mt-1">Verifique se todas as proteções mecânicas estão presentes e funcionais</p>
+                </label>
+              </div>
+              
+              <div class="checklist-item flex items-start">
+                <input 
+                  type="checkbox" 
+                  id="maq2" 
+                  name="maq2" 
+                  class="custom-checkbox mt-1 mr-2 sm:mr-3 cursor-pointer"
+                  <%= checklist && checklist.maq2 ? 'checked' : '' %>
+                >
+                <label for="maq2" class="text-gray-700 cursor-pointer text-sm sm:text-base">
+                  <span class="font-medium">Sinalização de segurança visível</span>
+                  <p class="text-xs sm:text-sm text-gray-500 mt-1">Confira se todas as placas de advertência estão legíveis e posicionadas corretamente</p>
+                </label>
+              </div>
             </div>
           </div>
           
-          <div class="mb-4">
-            <h6 class="mb-3">Área de Trabalho</h6>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="area1" name="area1" <%= checklist && checklist.area1 ? 'checked' : '' %>>
-              <label class="form-check-label" for="area1">Piso limpo e sem obstáculos</label>
+          <!-- Seção Área -->
+          <div class="border border-gray-200 rounded-lg p-3 sm:p-5 bg-gray-50">
+            <div class="flex items-center mb-3 sm:mb-4">
+              <div class="bg-primary-100 p-2 rounded-full section-icon mr-2 sm:mr-3">
+                <i class="fas fa-warehouse text-primary-600 text-lg sm:text-xl"></i>
+              </div>
+              <h3 class="text-base sm:text-lg font-semibold text-gray-800">Área de Trabalho</h3>
             </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="area2" name="area2" <%= checklist && checklist.area2 ? 'checked' : '' %>>
-              <label class="form-check-label" for="area2">Saídas de emergência desobstruídas</label>
+            
+            <div class="space-y-2 sm:space-y-3 checklist-content pl-12 sm:pl-14">
+              <div class="checklist-item flex items-start">
+                <input 
+                  type="checkbox" 
+                  id="area1" 
+                  name="area1" 
+                  class="custom-checkbox mt-1 mr-2 sm:mr-3 cursor-pointer"
+                  <%= checklist && checklist.area1 ? 'checked' : '' %>
+                >
+                <label for="area1" class="text-gray-700 cursor-pointer text-sm sm:text-base">
+                  <span class="font-medium">Piso limpo e sem obstáculos</span>
+                  <p class="text-xs sm:text-sm text-gray-500 mt-1">Verifique se não há objetos que possam causar tropeções ou quedas</p>
+                </label>
+              </div>
+              
+              <div class="checklist-item flex items-start">
+                <input 
+                  type="checkbox" 
+                  id="area2" 
+                  name="area2" 
+                  class="custom-checkbox mt-1 mr-2 sm:mr-3 cursor-pointer"
+                  <%= checklist && checklist.area2 ? 'checked' : '' %>
+                >
+                <label for="area2" class="text-gray-700 cursor-pointer text-sm sm:text-base">
+                  <span class="font-medium">Saídas de emergência desobstruídas</span>
+                  <p class="text-xs sm:text-sm text-gray-500 mt-1">Confirme que todas as rotas de fuga estão completamente livres</p>
+                </label>
+              </div>
             </div>
           </div>
           
-          <div class="mb-3">
-            <label for="observacoes" class="form-label">Observações</label>
-            <textarea class="form-control" id="observacoes" name="observacoes" rows="3"><%= checklist ? checklist.observacoes || '' : '' %></textarea>
+          <!-- Observações -->
+          <div class="mt-4 sm:mt-6">
+            <label for="observacoes" class="block text-sm font-medium text-gray-700 mb-1 sm:mb-2">
+              <i class="fas fa-edit text-primary-500 mr-2"></i> Observações
+            </label>
+            <textarea 
+              id="observacoes" 
+              name="observacoes" 
+              rows="4" 
+              class="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition duration-200 text-sm sm:text-base"
+              placeholder="Registre aqui qualquer observação relevante sobre a segurança do ambiente..."
+            ><%= checklist ? checklist.observacoes || '' : '' %></textarea>
           </div>
           
-          <button type="submit" class="btn btn-primary">Enviar Checklist</button>
+          <div class="flex justify-end mt-6 sm:mt-8">
+            <button 
+              type="submit" 
+              class="px-4 sm:px-6 py-2 sm:py-3 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-lg shadow-md transition duration-200 flex items-center text-sm sm:text-base"
+            >
+              <i class="fas fa-paper-plane mr-2"></i> Enviar Checklist
+            </button>
+          </div>
         </form>
       </div>
     </div>

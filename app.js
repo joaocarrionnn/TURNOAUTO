@@ -462,6 +462,8 @@ app.post('/ocorrencias/editar/:id', requireAuth, upload.single('imagem'), (req, 
   );
 });
 
+
+
 // Rota para exibir o checklist
 app.get('/checklist', requireAuth, (req, res) => {
   if (req.session.user.role === 'admin') {
