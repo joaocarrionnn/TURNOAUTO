@@ -1,78 +1,138 @@
-<header class="bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg">
+<header style=".object-cover {object-fit: cover;}" class="bg-gradient-to-r from-indigo-700 to-indigo-900 shadow-xl backdrop-blur-sm">
   <div class="container mx-auto px-4 py-3">
     <div class="flex items-center justify-between">
-      <!-- Logo/Brand -->
-      <a class="navbar-brand text-xl md:text-2xl font-bold text-white hover:text-blue-100 transition-colors duration-300 flex items-center" href="/">
-        <img src="/images/logo.png" style="max-width: 150px; max-height: 150px; width: 100%; height: 100%;" alt="TURNOSIM Logo" class=" mr-2">
-
+      <!-- Logo/Brand - Modernizado -->
+      <a href="/" class="flex items-center group">
+        <img src="/images/logo.png" alt="TURNOSIM Logo" class="h-10 md:h-12 ">
+        <span class="ml-3 text-2xl md:text-3xl font-extrabold text-white bg-clip-text bg-gradient-to-r from-blue-200 to-cyan-200">
+        </span>
       </a>  
       
       <% if (user) { %>
-        <div class="flex items-center space-x-4 md:space-x-6">
+        <div class="flex items-center space-x-3 md:space-x-6">
           <!-- Menu para Admin - Visível apenas em desktop -->
           <% if (user.role === 'admin') { %>
             <div class="hidden md:flex items-center space-x-4">
-              
+              <a href="/admin/dashboard" class="relative px-3 py-1.5 text-sm font-medium text-white group">
+                <span class="relative z-10 flex items-center">
+                  <i class="fas fa-shield-alt mr-2 text-cyan-300"></i>
+                  <span>Painel Admin</span>
+                </span>
+                <span class="absolute inset-0 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+              </a>
             </div>
           <% } %>
           
-          <!-- Chat - Visível em todas as telas -->
-          <a href="/chat" class="flex items-center px-3 py-1 md:px-4 md:py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-all duration-300 group">
-            <i class="fas fa-comments mr-2"></i>
-            <span class="hidden md:inline">Chat</span>
+          <!-- Chat Button - Modernizado -->
+          <a href="/chat" class="relative px-3 py-1.5 text-sm font-medium text-white group">
+            <span class="relative z-10 flex items-center">
+              <div class="relative">
+                <i class="fas fa-comments mr-2 text-blue-200"></i>
+                <span class="hidden md:inline">Chat</span>
+              </div>
+            </span>
+            <span class="absolute inset-0 bg-white/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
           </a>
           
-          <!-- Área do usuário (desktop) -->
+         <!-- User Profile - Desktop -->
           <div class="hidden md:flex items-center space-x-4">
-            <div class="flex flex-col items-end">
-              <span class="text-white font-medium"><%= user.name %></span>
-              <% if (user.role === 'admin') { %>
-                <span class="text-xs bg-yellow-400 text-blue-900 px-2 py-0.5 rounded-full font-bold">ADMIN</span>
-              <% } else { %>
-                <span class="text-xs text-blue-200">Usuário</span>
-              <% } %>
-            </div>
-            
-            <!-- Botão de Logout desktop -->
-            <a href="/logout" class="flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-300">
-              <i class="fas fa-sign-out-alt mr-2"></i>
-              <span>Sair</span>
-            </a>
-          </div>
-          
-          <!-- Menu mobile (ícone hamburguer) -->
-          <div class="md:hidden relative">
-            <button id="mobile-menu-button" class="flex items-center justify-center h-10 w-10 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-300">
-              <i class="fas fa-bars"></i>
-            </button>
-            
-            <!-- Menu dropdown mobile -->
-            <div id="mobile-menu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-              <div class="px-4 py-2 border-b border-gray-100">
-                <p class="font-medium text-gray-800"><%= user.name %></p>
+            <!-- Avatar com dropdown -->
+            <div class="relative z-40" id="desktop-user-menu"> <!-- Adicionei z-40 aqui -->
+              <button id="desktop-menu-button" class="flex items-center space-x-2 focus:outline-none">
+                <div class="relative">
+                  <% if (user.profile_picture) { %>
+                    <img src="<%= user.profile_picture %>" alt="Foto de perfil" class="h-10 w-10 rounded-full object-cover">
+                  <% } else { %>
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center text-white font-bold">
+                      <%= user.name.charAt(0).toUpperCase() %>
+                    </div>
+                  <% } %>
+                  <div class="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-indigo-800 <%= user.role === 'admin' ? 'bg-yellow-400' : 'bg-green-400' %>"></div>
+                </div>
+                <div class="flex flex-col items-start">
+                  <span class="text-white font-medium"><%= user.name %></span>
+                  <span class="text-xs <%= user.role === 'admin' ? 'text-yellow-300 font-bold' : 'text-blue-200' %>">
+                    <%= user.role === 'admin' ? 'Administrador' : 'Usuário' %>
+                  </span>
+                </div>
+                <i class="fas fa-chevron-down text-blue-200 text-xs ml-1 transition-transform duration-200" id="desktop-menu-chevron"></i>
+              </button>
+            <!-- Dropdown Menu -->
+            <div id="desktop-menu-dropdown" class="hidden absolute right-0 mt-2 w-56 origin-top-right bg-white rounded-lg shadow-xl z-50 border border-gray-200">
+              <div class="px-4 py-3 border-b border-gray-100">
+                <p class="text-sm font-medium text-gray-900"><%= user.name %></p>
+                <p class="text-xs <%= user.role === 'admin' ? 'text-yellow-600' : 'text-gray-500' %>">
+                  <%= user.role === 'admin' ? 'Conta Administrativa' : 'Conta Padrão' %>
+                </p>
+              </div>
+              <div class="py-1">
+                <a href="/perfil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center transition-colors">
+                  <i class="fas fa-user-circle mr-3 text-gray-400"></i> Meu Perfil
+                </a>
+                <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center transition-colors">
+                  <i class="fas fa-cog mr-3 text-gray-400"></i> Configurações
+                </a>
                 <% if (user.role === 'admin') { %>
-                  <p class="text-xs bg-yellow-400 text-blue-900 px-2 py-0.5 rounded-full font-bold inline-block">ADMIN</p>
-                <% } else { %>
-                  <p class="text-xs text-gray-500">Usuário</p>
+                  <a href="/admin/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center transition-colors">
+                    <i class="fas fa-shield-alt mr-3 text-gray-400"></i> Painel Admin
+                  </a>
                 <% } %>
               </div>
-              <a href="/profile" class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600 flex items-center">
-                <i class="fas fa-user-circle mr-2"></i> Perfil
-              </a>
-              <a href="/chat" class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600 flex items-center">
-                <i class="fas fa-comments mr-2"></i> Chat
-              </a>
-              <a href="/settings" class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600 flex items-center">
-                <i class="fas fa-cog mr-2"></i> Configurações
-              </a>
-              <% if (user.role === 'admin') { %>
-                <a href="/admin/dashboard" class="block px-4 py-2 text-gray-800 hover:bg-blue-50 hover:text-blue-600 flex items-center">
-                  <i class="fas fa-shield-alt mr-2"></i> Painel Admin
+              <div class="py-1 border-t border-gray-100">
+                <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center transition-colors">
+                  <i class="fas fa-sign-out-alt mr-3"></i> Sair
                 </a>
-              <% } %>
-              <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-50 flex items-center border-t border-gray-100">
-                <i class="fas fa-sign-out-alt mr-2"></i> Sair
-              </a>
+              </div>
+            </div>
+          </div>
+        </div>
+          
+          <!-- Mobile Menu Button - Modernizado -->
+          <div class="md:hidden relative">
+            <button id="mobile-menu-button" class="flex items-center justify-center h-10 w-10 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-white/30">
+              <i class="fas fa-bars text-lg"></i>
+            </button>
+              
+              <!-- Mobile Menu Dropdown - Modernizado -->
+              <div id="mobile-menu" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl py-2 z-50 border border-gray-100">
+                <div class="px-4 py-3 border-b border-gray-100 bg-gray-50 rounded-t-xl">
+                  <div class="flex items-center space-x-3">
+                    <% if (user.profile_picture) { %>
+                      <img src="<%= user.profile_picture %>" alt="Foto de perfil" class="h-10 w-10 rounded-full object-cover">
+                    <% } else { %>
+                      <div class="h-10 w-10 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center text-white font-bold">
+                        <%= user.name.charAt(0).toUpperCase() %>
+                      </div>
+                    <% } %>
+                    <div>
+                      <p class="font-medium text-gray-900"><%= user.name %></p>
+                      <p class="text-xs <%= user.role === 'admin' ? 'text-yellow-600 font-bold' : 'text-gray-500' %>">
+                        <%= user.role === 'admin' ? 'ADMINISTRADOR' : 'USUÁRIO' %>
+                      </p>
+                  </div>
+                </div>
+              </div>
+              <div class="py-1">
+                <a href="/perfil" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center transition-colors">
+                  <i class="fas fa-user-circle mr-3 text-gray-400 w-5 text-center"></i> Perfil
+                </a>
+                <a href="/chat" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center transition-colors">
+                  <i class="fas fa-comments mr-3 text-gray-400 w-5 text-center"></i> Chat
+                </a>
+                <a href="/settings" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center transition-colors">
+                  <i class="fas fa-cog mr-3 text-gray-400 w-5 text-center"></i> Configurações
+                </a>
+                <% if (user.role === 'admin') { %>
+                  <a href="/admin/dashboard" class="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center transition-colors">
+                    <i class="fas fa-shield-alt mr-3 text-gray-400 w-5 text-center"></i> Painel Admin
+                  </a>
+                <% } %>
+              </div>
+              <div class="py-1 border-t border-gray-100">
+                <a href="/logout" class="block px-4 py-3 text-red-600 hover:bg-red-50 flex items-center transition-colors">
+                  <i class="fas fa-sign-out-alt mr-3 text-red-500 w-5 text-center"></i> Sair
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -82,20 +142,63 @@
 </header>
 
 <script>
-  // Script para controlar o menu mobile
+  // Menu desktop - controle por clique
   document.addEventListener('DOMContentLoaded', function() {
+    const desktopMenuButton = document.getElementById('desktop-menu-button');
+    const desktopMenuDropdown = document.getElementById('desktop-menu-dropdown');
+    const desktopMenuChevron = document.getElementById('desktop-menu-chevron');
+    
+    if (desktopMenuButton && desktopMenuDropdown) {
+      desktopMenuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = desktopMenuDropdown.classList.toggle('hidden');
+        desktopMenuChevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        
+        // Adiciona classe de ativo ao botão
+        this.classList.toggle('bg-white/10', !isOpen);
+      });
+      
+      // Fechar ao clicar fora
+      document.addEventListener('click', function(event) {
+        if (!desktopMenuDropdown.contains(event.target) && event.target !== desktopMenuButton) {
+          desktopMenuDropdown.classList.add('hidden');
+          desktopMenuChevron.style.transform = 'rotate(0deg)';
+          desktopMenuButton.classList.remove('bg-white/10');
+        }
+      });
+      
+      // Fechar ao pressionar ESC
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          desktopMenuDropdown.classList.add('hidden');
+          desktopMenuChevron.style.transform = 'rotate(0deg)';
+          desktopMenuButton.classList.remove('bg-white/10');
+        }
+      });
+    }
+    
+    // Menu mobile (mantido do código anterior)
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     
     if (mobileMenuButton && mobileMenu) {
-      mobileMenuButton.addEventListener('click', function() {
+      mobileMenuButton.addEventListener('click', function(e) {
+        e.stopPropagation();
         mobileMenu.classList.toggle('hidden');
+        mobileMenuButton.classList.toggle('bg-white/20');
       });
       
-      // Fechar o menu quando clicar fora
       document.addEventListener('click', function(event) {
         if (!mobileMenu.contains(event.target) && event.target !== mobileMenuButton) {
           mobileMenu.classList.add('hidden');
+          mobileMenuButton.classList.remove('bg-white/20');
+        }
+      });
+      
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          mobileMenu.classList.add('hidden');
+          mobileMenuButton.classList.remove('bg-white/20');
         }
       });
     }

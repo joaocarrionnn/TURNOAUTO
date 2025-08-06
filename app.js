@@ -219,7 +219,8 @@ app.post('/login', (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role // Adicione esta linha
+        role: user.role,
+        profile_picture: user.profile_picture 
       };
       
       res.redirect('/');
@@ -1062,8 +1063,225 @@ app.get('/admin/ocorrencias', requireAdmin, (req, res) => {
   );
 });
 
+
+// Rota para exibir o perfil do usuário
+app.get('/perfil', requireAuth, (req, res) => {
+  db.query(
+    'SELECT id, name, email, role, profile_picture FROM users WHERE id = ?',
+    [req.session.user.id],
+    (err, results) => {
+      if (err || results.length === 0) {
+        console.error(err);
+        return res.status(500).send('Erro ao carregar perfil');
+      }
+      
+      const userData = results[0];
+      res.render('perfil', {
+        title: 'Meu Perfil',
+        user: req.session.user,
+        profile: userData
+      });
+    }
+  );
+});
+
+// Rota para atualizar informações básicas
+app.post('/perfil/atualizar', requireAuth, (req, res) => {
+  const { name, email } = req.body;
+  
+  // Validações básicas
+  if (!name || !email) {
+    return res.redirect('/perfil?error=Todos os campos são obrigatórios');
+  }
+  
+  // Verificar se o email já está em uso por outro usuário
+  db.query(
+    'SELECT id FROM users WHERE email = ? AND id != ?',
+    [email, req.session.user.id],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.redirect('/perfil?error=Erro ao verificar email');
+      }
+      
+      if (results.length > 0) {
+        return res.redirect('/perfil?error=Email já está em uso por outro usuário');
+      }
+      
+      // Atualizar informações
+      db.query(
+        'UPDATE users SET name = ?, email = ? WHERE id = ?',
+        [name, email, req.session.user.id],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.redirect('/perfil?error=Erro ao atualizar perfil');
+          }
+          
+          // Atualizar sessão
+          req.session.user.name = name;
+          req.session.user.email = email;
+          
+          res.redirect('/perfil?success=Perfil atualizado com sucesso');
+        }
+      );
+    }
+  );
+});
+
+// Rota para alterar senha
+app.post('/perfil/alterar-senha', requireAuth, (req, res) => {
+  const { senha_atual, nova_senha, confirmar_senha } = req.body;
+  
+  // Validações
+  if (nova_senha !== confirmar_senha) {
+    return res.redirect('/perfil?error=As novas senhas não coincidem');
+  }
+  
+  if (nova_senha.length < 6) {
+    return res.redirect('/perfil?error=A senha deve ter pelo menos 6 caracteres');
+  }
+  
+  // Verificar senha atual
+  db.query(
+    'SELECT password FROM users WHERE id = ?',
+    [req.session.user.id],
+    (err, results) => {
+      if (err || results.length === 0) {
+        console.error(err);
+        return res.redirect('/perfil?error=Erro ao verificar senha atual');
+      }
+      
+      const hashAtual = results[0].password;
+      
+      bcrypt.compare(senha_atual, hashAtual, (err, isMatch) => {
+        if (err || !isMatch) {
+          return res.redirect('/perfil?error=Senha atual incorreta');
+        }
+        
+        // Criptografar nova senha
+        bcrypt.hash(nova_senha, 10, (err, newHash) => {
+          if (err) {
+            console.error(err);
+            return res.redirect('/perfil?error=Erro ao criptografar nova senha');
+          }
+          
+          // Atualizar senha
+          db.query(
+            'UPDATE users SET password = ? WHERE id = ?',
+            [newHash, req.session.user.id],
+            (err, result) => {
+              if (err) {
+                console.error(err);
+                return res.redirect('/perfil?error=Erro ao atualizar senha');
+              }
+              
+              res.redirect('/perfil?success=Senha alterada com sucesso');
+            }
+          );
+        });
+      });
+    }
+  );
+});
+
+// Rota para atualizar foto de perfil
+app.post('/perfil/upload-foto', requireAuth, upload.single('foto_perfil'), (req, res) => {
+  if (!req.file) {
+    return res.redirect('/perfil?error=Nenhuma imagem foi enviada');
+  }
+  
+  const imagePath = '/uploads/' + req.file.filename;
+  
+  // Primeiro, obtemos a foto antiga para deletar
+  db.query(
+    'SELECT profile_picture FROM users WHERE id = ?',
+    [req.session.user.id],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.redirect('/perfil?error=Erro ao verificar foto atual');
+      }
+      
+      const oldImage = results[0].profile_picture;
+      
+      // Atualiza com a nova foto
+      db.query(
+        'UPDATE users SET profile_picture = ? WHERE id = ?',
+        [imagePath, req.session.user.id],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.redirect('/perfil?error=Erro ao atualizar foto de perfil');
+          }
+          
+          // Remove a foto antiga se existir e não for a padrão
+          if (oldImage && !oldImage.includes('default-profile')) {
+            const oldImagePath = path.join(__dirname, 'public', oldImage);
+            fs.unlink(oldImagePath, (err) => {
+              if (err) console.error('Erro ao remover imagem antiga:', err);
+            });
+          }
+          
+          // Atualiza a sessão
+          req.session.user.profile_picture = imagePath;
+          
+          
+          res.redirect('/perfil?success=Foto de perfil atualizada com sucesso');
+        }
+      );
+    }
+  );
+});
+
+// Rota para remover foto de perfil
+app.post('/perfil/remover-foto', requireAuth, (req, res) => {
+  // Primeiro, obtemos a foto atual
+  db.query(
+    'SELECT profile_picture FROM users WHERE id = ?',
+    [req.session.user.id],
+    (err, results) => {
+      if (err || results.length === 0) {
+        console.error(err);
+        return res.redirect('/perfil?error=Erro ao verificar foto atual');
+      }
+      
+      const currentImage = results[0].profile_picture;
+      const defaultImage = '/images/default-profile.png'; // Caminho para imagem padrão
+      
+      // Se já for a imagem padrão, não faz nada
+      if (currentImage === defaultImage || !currentImage) {
+        return res.redirect('/perfil?error=Não há foto para remover');
+      }
+      
+      // Remove a foto do sistema de arquivos
+      const imagePath = path.join(__dirname, 'public', currentImage);
+      fs.unlink(imagePath, (err) => {
+        if (err) console.error('Erro ao remover imagem:', err);
+        
+        // Atualiza no banco de dados para a imagem padrão
+        db.query(
+          'UPDATE users SET profile_picture = ? WHERE id = ?',
+          [defaultImage, req.session.user.id],
+          (err, result) => {
+            if (err) {
+              console.error(err);
+              return res.redirect('/perfil?error=Erro ao remover foto de perfil');
+            }
+            
+            // Atualiza a sessão
+            req.session.user.profile_picture = defaultImage;
+            
+            res.redirect('/perfil?success=Foto de perfil removida com sucesso');
+          }
+        );
+      });
+    }
+  );
+});
+
 // Iniciar servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
