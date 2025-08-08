@@ -71,21 +71,20 @@
           <!-- Barra lateral -->
           <div class="w-full md:w-64 bg-indigo-50 p-6 border-b md:border-b-0 md:border-r border-gray-200">
             <div class="flex flex-col items-center">
-                <div class="relative mb-4 group z-30"> <!-- Adicionei z-30 aqui (menor que o z-40 do header) -->
-                    <div class="h-32 w-32 rounded-full overflow-hidden border-4 border-white shadow-lg profile-picture relative z-20">
-                      <img src="<%= profile.profile_picture || '/images/default-profile.png' %>" 
-                        alt="Foto de perfil" 
-                        class="h-full w-full object-cover">
-                    </div>
-                    <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                      <label for="foto_perfil" class="cursor-pointer bg-black/50 rounded-full p-2 text-white">
-                        <i class="fas fa-camera"></i>
-                      </label>
-                    </div>
+                <div class="relative mb-4 group">
+                  <div class="h-32 w-32 rounded-full overflow-hidden border-4 border-white shadow-lg profile-picture">
+                    <img src="<%= profile.profile_picture || '/images/default-profile.png' %>" 
+                         alt="Foto de perfil" 
+                         class="h-full w-full object-cover">
                   </div>
-              <form id="upload-form" action="/perfil/upload-foto" method="POST" enctype="multipart/form-data" class="hidden">
-                <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*" class="hidden">
-              </form>
+                  <label for="foto_perfil" class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer bg-black/50 rounded-full">
+                    <i class="fas fa-camera text-white text-xl"></i>
+                  </label>
+                </div>
+                
+                <form id="upload-form" action="/perfil/upload-foto" method="POST" enctype="multipart/form-data">
+                  <input type="file" id="foto_perfil" name="foto_perfil" accept="image/*" class="hidden">
+                </form>
               
               <h2 class="text-xl font-semibold text-gray-800 text-center"><%= profile.name %></h2>
               <p class="text-sm text-gray-500 mt-1"><%= profile.email %></p>
@@ -295,34 +294,57 @@
       });
     });
     
-    // Upload de foto de perfil
-    document.getElementById('foto_perfil').addEventListener('change', function() {
-      if (this.files && this.files[0]) {
-        // Validação básica do arquivo
-        const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        if (!validTypes.includes(this.files[0].type)) {
-          alert('Por favor, selecione uma imagem (JPEG, PNG ou GIF)');
-          return;
-        }
-        
-        // Limite de tamanho (5MB)
-        if (this.files[0].size > 5 * 1024 * 1024) {
-          alert('A imagem deve ter no máximo 5MB');
-          return;
-        }
-        
-        // Mostra preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.querySelector('.profile-picture img').src = e.target.result;
-        }
-        reader.readAsDataURL(this.files[0]);
-        
-        // Submete o formulário
-        document.getElementById('upload-form').submit();
-      }
-    });
+    // Upload de foto de perfil - versão corrigida
+  document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('foto_perfil');
     
+    if (fileInput) {
+      fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          // Validação do arquivo
+          const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+          if (!validTypes.includes(this.files[0].type)) {
+            alert('Por favor, selecione uma imagem (JPEG, PNG ou GIF)');
+            return;
+          }
+          
+          // Limite de tamanho (5MB)
+          if (this.files[0].size > 5 * 1024 * 1024) {
+            alert('A imagem deve ter no máximo 5MB');
+            return;
+          }
+          
+          // Mostra preview
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            document.querySelector('.profile-picture img').src = e.target.result;
+          }
+          reader.readAsDataURL(this.files[0]);
+          
+          // Cria FormData e envia via AJAX
+          const formData = new FormData();
+          formData.append('foto_perfil', this.files[0]);
+          
+          fetch('/perfil/upload-foto', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              window.location.reload();
+            } else {
+              alert(data.error || 'Erro ao atualizar a foto');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Erro ao enviar a foto');
+          });
+        }
+      });
+    }
+  });
     // Abre o seletor de arquivos ao clicar no ícone da câmera
     document.querySelector('label[for="foto_perfil"]').addEventListener('click', function(e) {
       e.preventDefault();

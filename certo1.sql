@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS `alertas` (
   CONSTRAINT `alertas_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Copiando dados para a tabela auth_system.alertas: ~1 rows (aproximadamente)
+-- Copiando dados para a tabela auth_system.alertas: ~0 rows (aproximadamente)
 INSERT INTO `alertas` (`id`, `user_id`, `titulo`, `descricao`, `tipo`, `severidade`, `status`, `data_criacao`) VALUES
-	(1, 6, 'aaa', 'aaa', 'Outro', 'crítica', 'ativo', '2025-08-06 13:11:30');
+	(1, 6, 'aaa', 'aaa', 'Outro', 'alta', 'ativo', '2025-08-06 13:11:30');
 
 -- Copiando estrutura para tabela auth_system.checklists
 CREATE TABLE IF NOT EXISTS `checklists` (
@@ -121,15 +121,16 @@ CREATE TABLE IF NOT EXISTS `ocorrencias` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `ocorrencias_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Copiando dados para a tabela auth_system.ocorrencias: ~5 rows (aproximadamente)
+-- Copiando dados para a tabela auth_system.ocorrencias: ~6 rows (aproximadamente)
 INSERT INTO `ocorrencias` (`id`, `user_id`, `tipo`, `descricao`, `urgencia`, `imagem`, `status`, `data_criacao`) VALUES
 	(1, 3, 'Segurança', 'ferro a porta\r\n', 'alta', NULL, 'pendente', '2025-07-30 16:32:03'),
 	(2, 3, 'manutencao', 'fudeu', 'media', NULL, 'resolvido', '2025-07-30 18:33:14'),
 	(3, 2, 'manutencao', 'sada', 'alta', NULL, 'resolvido', '2025-07-30 18:57:24'),
 	(4, 3, 'Limpeza', 'ada', 'baixa', '/uploads/9b5720ae634a51c5a0a6f5eff6dacbe2', 'em_andamento', '2025-08-06 11:34:04'),
-	(5, 3, 'manutencao', 'a', 'alta', NULL, 'resolvido', '2025-08-06 13:10:31');
+	(5, 3, 'manutencao', 'a', 'alta', NULL, 'resolvido', '2025-08-06 13:10:31'),
+	(6, 6, 'Qualidade', 'aaa', 'alta', NULL, 'em_andamento', '2025-08-08 19:43:01');
 
 -- Copiando estrutura para tabela auth_system.users
 CREATE TABLE IF NOT EXISTS `users` (
@@ -151,7 +152,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `created_at`, `role`, `p
 	(3, 'joao', 'jao@23', '$2b$10$phGLGQpr6wqFr/WRE6ReL.d5qGdzeNaQ.y7UyNgQ65xanX78Qcc5.', '2025-07-30 13:06:08', 'user', '/uploads/e44ba09ce2b2ca220fda2d7b5a66ee73'),
 	(4, 'Admin', 'admin@23', '12345678', '2025-07-30 16:51:03', 'admin', '/images/default-profile.png'),
 	(5, 'Admin', 'jao@admin', '12345678', '2025-07-30 17:13:20', 'admin', '/images/default-profile.png'),
-	(6, 'policarpio', 'poli@23', '$2b$10$IxL4QdW4eIPiZmwFsaOqYuQPt1riFsAhceGNM1RbF5VcuLnEYXd..', '2025-07-30 17:16:23', 'admin', '/images/default-profile.png');
+	(6, 'policarpio', 'poli@23', '$2b$10$IxL4QdW4eIPiZmwFsaOqYuQPt1riFsAhceGNM1RbF5VcuLnEYXd..', '2025-07-30 17:16:23', 'admin', '/uploads/a69ece1f10f863c5811ecbe3f698076f');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
