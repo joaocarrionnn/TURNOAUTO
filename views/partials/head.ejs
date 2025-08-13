@@ -5,3 +5,283 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="/css/style.css">
 <link rel="shortcut icon" href="/images/logo_preto.png" type="image/x-icon">
+
+<style>
+    /* Tema Escuro Global - Aplicado quando a classe 'dark' está no html */
+    html.dark {
+      color-scheme: dark;
+    }
+    
+    .dark {
+      /* Cores de fundo */
+      --bg-primary: #1a202c;
+      --bg-secondary: #2d3748;
+      --bg-card: #2d3748;
+      
+      /* Cores de texto */
+      --text-primary: #f7fafc;
+      --text-secondary: #e2e8f0;
+      
+      /* Cores de borda */
+      --border-primary: #4a5568;
+      --border-secondary: #718096;
+      
+      /* Cores especiais */
+      --bg-hover: #4a5568;
+      --bg-active: #2c5282;
+    }
+  
+    /* Aplicação do tema escuro */
+    .dark body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    
+    .dark .bg-white {
+      background-color: var(--bg-card) !important;
+    }
+    
+    .dark .bg-gray-50,
+    .dark .bg-gray-100 {
+      background-color: var(--bg-secondary) !important;
+    }
+    
+    .dark .text-gray-800,
+    .dark .text-gray-700,
+    .dark .text-gray-600,
+    .dark .text-gray-900 {
+      color: var(--text-primary) !important;
+    }
+    
+    .dark .text-gray-500,
+    .dark .text-gray-400 {
+      color: var(--text-secondary) !important;
+    }
+    
+    .dark .border-gray-200,
+    .dark .border-gray-300 {
+      border-color: var(--border-primary) !important;
+    }
+    
+    /* Inputs */
+    .dark .input-field,
+    .dark input,
+    .dark textarea,
+    .dark select {
+      background-color: var(--bg-secondary) !important;
+      color: var(--text-primary) !important;
+      border-color: var(--border-primary) !important;
+    }
+    
+    .dark .input-field:focus,
+    .dark input:focus,
+    .dark textarea:focus,
+    .dark select:focus {
+      border-color: #4299e1 !important;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2) !important;
+    }
+    
+    /* Barras de progresso */
+    .dark .progress-bg {
+      background-color: var(--border-primary) !important;
+    }
+    
+    /* Hover states */
+    .dark .hover\:bg-gray-100:hover {
+      background-color: var(--bg-hover) !important;
+    }
+    
+    /* Cards e shadows */
+    .dark .shadow-md,
+    .dark .shadow-lg {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Botões */
+    .dark .btn-primary {
+      background-color: #2b6cb0 !important;
+      border-color: #2b6cb0 !important;
+    }
+    
+    /* Tabelas */
+    .dark table {
+      color: var(--text-primary) !important;
+    }
+    
+    .dark thead {
+      background-color: var(--bg-secondary) !important;
+    }
+    
+    .dark tr:hover {
+      background-color: var(--bg-hover) !important;
+    }
+    
+    /* Para tooltips/popovers */
+.dark .tooltip {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-primary) !important;
+}
+
+/* Para modais */
+.dark .modal-content {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Para dropdowns */
+.dark .dropdown-menu {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-primary) !important;
+}
+
+.dark .dropdown-item:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Estilos específicos para o tema escuro */
+.dark .profile-picture-dark {
+  border-color: #4b5563 !important;
+}
+
+.dark .bg-indigo-50 {
+  background-color: #1e293b !important;
+}
+
+.dark .text-indigo-700 {
+  color: #a5b4fc !important;
+}
+
+.dark .bg-indigo-100 {
+  background-color: #3730a3 !important;
+}
+
+.dark .hover\:bg-indigo-50:hover {
+  background-color: #312e81 !important;
+}
+
+.dark .hover\:text-indigo-700:hover {
+  color: #818cf8 !important;
+}
+
+/* Garante que o gradiente escuro seja aplicado corretamente */
+.dark .bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to)) !important;
+}
+
+/* Ajusta a opacidade do gradiente no dark mode */
+.dark .from-gray-800 {
+  --tw-gradient-from: #1f2937 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(31 41 55 / 0) var(--tw-gradient-to-position);
+}
+
+.dark .to-gray-700 {
+  --tw-gradient-to: #374151 var(--tw-gradient-to-position);
+}
+
+
+.dark .from-gray-50 {
+  --tw-gradient-from: #1f2937 !important;
+  --tw-gradient-to: rgb(31 41 55 / 0) !important;
+}
+
+/* Garante transição suave para o footer */
+footer {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Estilo adicional para links no footer (se tiver) */
+footer a {
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.dark footer a:hover {
+  color: #93c5fd; /* azul claro para contraste */
+}
+  </style>
+  
+  <script>
+    // Sistema de tema completo
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verifica o tema salvo ou preferência do sistema
+      const savedTheme = localStorage.getItem('theme') || 
+                        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      
+      // Aplica o tema inicial
+      applyTheme(savedTheme);
+      
+      // Configura os botões de tema se existirem
+      setupThemeButtons();
+    });
+  
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('theme', theme);
+      
+      // Atualiza ícones dos botões se existirem
+      updateThemeButtons(theme);
+    }
+  
+    function setupThemeButtons() {
+      const lightBtn = document.getElementById('light-theme-btn');
+      const darkBtn = document.getElementById('dark-theme-btn');
+      
+      if (lightBtn && darkBtn) {
+        lightBtn.addEventListener('click', () => applyTheme('light'));
+        darkBtn.addEventListener('click', () => applyTheme('dark'));
+      }
+    }
+  
+    function updateThemeButtons(theme) {
+      const lightBtn = document.getElementById('light-theme-btn');
+      const darkBtn = document.getElementById('dark-theme-btn');
+      
+      if (lightBtn && darkBtn) {
+        if (theme === 'light') {
+          lightBtn.classList.add('active-theme');
+          darkBtn.classList.remove('active-theme');
+        } else {
+          darkBtn.classList.add('active-theme');
+          lightBtn.classList.remove('active-theme');
+        }
+      }
+    }
+  
+    // Função global para mudar o tema
+    window.changeTheme = function(theme) {
+      applyTheme(theme);
+    };
+
+
+    // Observador para elementos dinâmicos
+const observer = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    if (document.documentElement.classList.contains('dark')) {
+      // Aplica classes dark para novos elementos adicionados ao DOM
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) { // Verifica se é um elemento
+          applyDarkClasses(node);
+        }
+      });
+    }
+  });
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});
+
+function applyDarkClasses(element) {
+  // Adicione aqui a lógica para elementos específicos
+  if (element.classList.contains('progress')) {
+    element.classList.add('dark:progress-bg');
+  }
+  // Continue para outros elementos conforme necessário
+}
+  </script>

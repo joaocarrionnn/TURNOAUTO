@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="h-full">
 <head>
   <%- include('partials/head', {title: 'Chat'}); %>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,6 +13,12 @@
       width: 300px;
       border-right: 1px solid #dee2e6;
       overflow-y: auto;
+      background-color: #ffffff;
+    }
+    
+    .dark .conversas-list {
+      background-color: #1f2937;
+      border-right-color: #374151;
     }
     
     .conversa-item {
@@ -21,14 +27,27 @@
       cursor: pointer;
       display: flex;
       justify-content: space-between;
+      transition: background-color 0.2s;
+    }
+    
+    .dark .conversa-item {
+      border-bottom-color: #374151;
     }
     
     .conversa-item:hover {
       background-color: #f8f9fa;
     }
     
+    .dark .conversa-item:hover {
+      background-color: #374151;
+    }
+    
     .conversa-item.active {
       background-color: #e9ecef;
+    }
+    
+    .dark .conversa-item.active {
+      background-color: #4b5563;
     }
     
     .conversa-nao-lidas {
@@ -47,12 +66,24 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      background-color: #f8f9fa;
+    }
+    
+    .dark .chat-area {
+      background-color: #111827;
     }
     
     .chat-header {
       padding: 15px;
       border-bottom: 1px solid #dee2e6;
       font-weight: bold;
+      background-color: #ffffff;
+    }
+    
+    .dark .chat-header {
+      background-color: #1f2937;
+      border-bottom-color: #374151;
+      color: #f3f4f6;
     }
     
     .chat-messages {
@@ -61,11 +92,23 @@
       padding: 15px;
       display: flex;
       flex-direction: column;
+      gap: 10px;
+      background-color: #f8f9fa;
+    }
+    
+    .dark .chat-messages {
+      background-color: #111827;
     }
     
     .chat-input-container {
       padding: 15px;
       border-top: 1px solid #dee2e6;
+      background-color: #ffffff;
+    }
+    
+    .dark .chat-input-container {
+      background-color: #1f2937;
+      border-top-color: #374151;
     }
     
     .message {
@@ -80,19 +123,21 @@
     
     .message.received {
       align-self: flex-start;
-      background-color: #f1f1f1;
+      background-color: #ffffff;
       border: 1px solid #e5e5ea;
-      margin-right: auto;
-      border-bottom-left-radius: 4px;
+      color: #111827;
+    }
+    
+    .dark .message.received {
+      background-color: #374151;
+      border-color: #4b5563;
+      color: #f3f4f6;
     }
     
     .message.sent {
       align-self: flex-end;
       background-color: #007bff;
       color: white;
-      margin-left: auto;
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
     
     .message-info {
@@ -106,19 +151,24 @@
       color: #666;
     }
     
+    .dark .message.received .message-info {
+      color: #d1d5db;
+    }
+    
     .message.sent .message-info {
       text-align: right;
       color: rgba(255,255,255,0.8);
     }
     
-    .message:hover {
-      opacity: 0.9;
-      transition: opacity 0.2s;
-    }
-    
     .search-container {
       padding: 10px;
       border-bottom: 1px solid #dee2e6;
+      background-color: #ffffff;
+    }
+    
+    .dark .search-container {
+      background-color: #1f2937;
+      border-bottom-color: #374151;
     }
     
     .search-results {
@@ -132,30 +182,51 @@
       display: none;
     }
     
+    .dark .search-results {
+      background-color: #1f2937;
+      border-color: #374151;
+    }
+    
     .search-result-item {
       padding: 10px;
       cursor: pointer;
     }
     
+    .dark .search-result-item {
+      color: #f3f4f6;
+    }
+    
     .search-result-item:hover {
       background-color: #f8f9fa;
     }
+    
+    .dark .search-result-item:hover {
+      background-color: #374151;
+    }
+    
+    .text-muted {
+      color: #6c757d;
+    }
+    
+    .dark .text-muted {
+      color: #9ca3af;
+    }
   </style>
 </head>
-<body>
+<body class="bg-gray-50 dark:bg-gray-900 h-full">
   <%- include('partials/header', {user: user}); %>
   
-  <main class="container my-4">
-    <h1 class="mb-4">Chat do Turno</h1>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">Chat do Turno</h1>
     
-    <div class="card">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
       <div class="chat-container">
         <!-- Lista de conversas -->
         <div class="conversas-list">
           <div class="search-container">
-            <div class="input-group mb-3">
-              <input type="text" id="search-user" class="form-control" placeholder="Buscar usuário...">
-              <button class="btn btn-outline-secondary" type="button" id="search-button">
+            <div class="relative">
+              <input type="text" id="search-user" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-white" placeholder="Buscar usuário...">
+              <button class="absolute right-2 top-2 text-gray-400 dark:text-gray-300" id="search-button">
                 <i class="fas fa-search"></i>
               </button>
             </div>
@@ -166,7 +237,7 @@
             <% conversas.forEach(conversa => { %>
               <div class="conversa-item" data-conversa-id="<%= conversa.id %>" 
                    onclick="loadConversation(<%= conversa.id %>, <%= conversa.usuario1_id === user.id ? conversa.usuario2_id : conversa.usuario1_id %>, '<%= conversa.usuario1_id === user.id ? conversa.usuario2_name : conversa.usuario1_name %>')">
-                <div>
+                <div class="text-gray-800 dark:text-gray-200">
                   <%= conversa.usuario1_id === user.id ? conversa.usuario2_name : conversa.usuario1_name %>
                 </div>
                 <% if (conversa.nao_lidas > 0) { %>
@@ -181,18 +252,16 @@
         
         <!-- Área do chat -->
         <div class="chat-area" id="chat-area">
-          <div class="chat-header text-center text-muted" id="chat-header">
+          <div class="chat-header text-center text-gray-500 dark:text-gray-400" id="chat-header">
             Selecione uma conversa ou inicie uma nova
           </div>
           <div class="chat-messages" id="chat-messages"></div>
           <div class="chat-input-container" id="chat-input-container" style="display: none;">
-            <form id="message-form">
-              <div class="input-group">
-                <input type="text" class="form-control" id="message-input" placeholder="Digite sua mensagem..." autocomplete="off">
-                <button class="btn btn-primary" type="submit">
-                  <i class="fas fa-paper-plane"></i> Enviar
-                </button>
-              </div>
+            <form id="message-form" class="flex gap-2">
+              <input type="text" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-white" id="message-input" placeholder="Digite sua mensagem..." autocomplete="off">
+              <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" type="submit">
+                <i class="fas fa-paper-plane"></i>
+              </button>
             </form>
           </div>
         </div>

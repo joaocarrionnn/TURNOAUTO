@@ -1,64 +1,77 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="h-full">
 <head>
   <script src="https://cdn.tailwindcss.com"></script>
+  <%- include('../partials/head', {title: 'Nova Ocorrência'}); %>
 </head>
-<body>
-    <%- include('../partials/head', {title: 'Nova Ocorrência'}); %>
-    <%- include('../partials/header', {user: user}); %>
+<body class="bg-gray-50 dark:bg-gray-900 h-full">
+  <%- include('../partials/header', {user: user}); %>
   
-  <main class="container my-4">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="mb-0">Nova Ocorrência</h2>
+  <main class="container mx-auto px-4 py-8">
+    <div class="flex justify-center">
+      <div class="w-full max-w-4xl">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <!-- Cabeçalho do Card -->
+          <div class="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-b dark:border-gray-600">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Nova Ocorrência</h2>
           </div>
-          <div class="card-body">
+          
+          <!-- Corpo do Card -->
+          <div class="p-6">
             <form action="/ocorrencias" method="POST" enctype="multipart/form-data">
-              <div class="mb-3">
-                <label for="tipo" class="form-label">Tipo de Ocorrência</label>
-                <select class="form-select" id="tipo" name="tipo" required>
+              <!-- Tipo de Ocorrência -->
+              <div class="mb-6">
+                <label for="tipo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tipo de Ocorrência</label>
+                <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" id="tipo" name="tipo" required>
                   <option value="" selected disabled>Selecione um tipo</option>
-                  <option value="Manutenção">Manutenção</option>
-                  <option value="Segurança">Segurança</option>
-                  <option value="Qualidade">Qualidade</option>
-                  <option value="Limpeza">Limpeza</option>
-                  <option value="Outro">Outro</option>
+                  <option value="Manutenção" class="dark:bg-gray-700">Manutenção</option>
+                  <option value="Segurança" class="dark:bg-gray-700">Segurança</option>
+                  <option value="Qualidade" class="dark:bg-gray-700">Qualidade</option>
+                  <option value="Limpeza" class="dark:bg-gray-700">Limpeza</option>
+                  <option value="Outro" class="dark:bg-gray-700">Outro</option>
                 </select>
               </div>
               
-              <div class="mb-3">
-                <label for="descricao" class="form-label">Descrição</label>
-                <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+              <!-- Descrição -->
+              <div class="mb-6">
+                <label for="descricao" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Descrição</label>
+                <textarea class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" id="descricao" name="descricao" rows="4" required></textarea>
               </div>
               
-              <div class="mb-3">
-                <label for="urgencia" class="form-label">Nível de Urgência</label>
-                <select class="form-select" id="urgencia" name="urgencia" required>
-                  <option value="baixa">Baixa</option>
-                  <option value="media" selected>Média</option>
-                  <option value="alta">Alta</option>
+              <!-- Nível de Urgência -->
+              <div class="mb-6">
+                <label for="urgencia" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nível de Urgência</label>
+                <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" id="urgencia" name="urgencia" required>
+                  <option value="baixa" class="dark:bg-gray-700">Baixa</option>
+                  <option value="media" selected class="dark:bg-gray-700">Média</option>
+                  <option value="alta" class="dark:bg-gray-700">Alta</option>
                 </select>
               </div>
               
-              <div class="mb-3">
-                <label for="imagem" class="form-label">Anexar Imagem (Opcional)</label>
-                <input class="form-control" type="file" id="imagem" name="imagem" accept="image/*">
+              <!-- Anexar Imagem -->
+              <div class="mb-6">
+                <label for="imagem" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Anexar Imagem (Opcional)</label>
+                <input class="block w-full text-sm text-gray-500 dark:text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 dark:file:bg-gray-600 file:text-indigo-700 dark:file:text-gray-200 hover:file:bg-indigo-100 dark:hover:file:bg-gray-500" type="file" id="imagem" name="imagem" accept="image/*">
               </div>
               
-              <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select class="form-select" id="status" name="status" required>
-                  <option value="pendente" selected>Pendente</option>
-                  <option value="em_andamento">Em Andamento</option>
-                  <option value="resolvido">Resolvido</option>
+              <!-- Status -->
+              <div class="mb-8">
+                <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Status</label>
+                <select class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white" id="status" name="status" required>
+                  <option value="pendente" selected class="dark:bg-gray-700">Pendente</option>
+                  <option value="em_andamento" class="dark:bg-gray-700">Em Andamento</option>
+                  <option value="resolvido" class="dark:bg-gray-700">Resolvido</option>
                 </select>
               </div>
               
-              <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Registrar Ocorrência</button>
-                <a href="/ocorrencias" class="btn btn-outline-secondary">Cancelar</a>
+              <!-- Botões -->
+              <div class="flex justify-end space-x-4">
+                <button type="submit" class="px-6 py-2 bg-indigo-600 dark:bg-indigo-700 text-white font-medium rounded-md shadow-sm hover:bg-indigo-700 dark:hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                  Registrar Ocorrência
+                </button>
+                <a href="/ocorrencias" class="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                  Cancelar
+                </a>
               </div>
             </form>
           </div>

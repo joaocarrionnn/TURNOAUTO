@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="h-full">
 <head>
   <%- include('partials/head', {title: title}); %>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Layout base */
     .chat-container {
       display: flex;
       flex-direction: column;
-      height: calc(100vh - 150px); /* Ajuste baseado no header */
+      height: calc(100vh - 150px);
+    }
+    
+    .dark .chat-container {
+      background-color: #111827;
     }
     
     .chat-messages {
@@ -21,7 +24,10 @@
       gap: 10px;
     }
     
-    /* Mensagens */
+    .dark .chat-messages {
+      background-color: #111827;
+    }
+    
     .message {
       max-width: 80%;
       padding: 10px 15px;
@@ -35,6 +41,13 @@
       align-self: flex-start;
       background-color: #ffffff;
       border: 1px solid #e5e5ea;
+      color: #111827;
+    }
+    
+    .dark .received {
+      background-color: #374151;
+      border-color: #4b5563;
+      color: #f3f4f6;
     }
     
     .sent {
@@ -51,6 +64,11 @@
     
     .received .message-info {
       text-align: left;
+      color: #666;
+    }
+    
+    .dark .received .message-info {
+      color: #d1d5db;
     }
     
     .sent .message-info {
@@ -58,14 +76,17 @@
       color: rgba(255,255,255,0.8);
     }
     
-    /* Área de input */
     .chat-input-container {
       background-color: white;
       padding: 10px;
       border-top: 1px solid #dee2e6;
     }
     
-    /* Header da conversa */
+    .dark .chat-input-container {
+      background-color: #1f2937;
+      border-top-color: #374151;
+    }
+    
     .chat-header {
       padding: 10px 15px;
       background-color: #f8f9fa;
@@ -75,88 +96,57 @@
       z-index: 10;
     }
     
-    /* Ajustes para mobile */
+    .dark .chat-header {
+      background-color: #1f2937;
+      border-bottom-color: #374151;
+      color: #f3f4f6;
+    }
+    
     @media (max-width: 768px) {
       .chat-container {
         height: calc(100vh - 120px);
       }
-      
-      .message {
-        max-width: 90%;
-        padding: 8px 12px;
-      }
-      
-      .chat-header {
-        padding: 8px;
-      }
-      
-      .chat-input-container {
-        padding: 8px;
-      }
-      
-      .btn {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.8rem;
-      }
-    }
-    
-    /* Melhorias para telas muito pequenas */
-    @media (max-width: 576px) {
-      .message {
-        max-width: 95%;
-        font-size: 0.85rem;
-      }
-      
-      .message-info {
-        font-size: 0.65rem;
-      }
     }
   </style>
 </head>
-<body>
+<body class="bg-gray-50 dark:bg-gray-900 h-full">
   <%- include('partials/header', {user: user}); %>
   
-  <main class="container-fluid px-0">
-    <div class="chat-header d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">Conversa com <%= outroUsuarioNome %></h5>
-      <a href="/chat" class="btn btn-sm btn-secondary">
-        <i class="fas fa-arrow-left"></i> Voltar
-      </a>
+  <div class="chat-header flex justify-between items-center">
+    <h5 class="text-lg font-medium text-gray-800 dark:text-white mb-0">Conversa com <%= outroUsuarioNome %></h5>
+    <a href="/chat" class="px-3 py-1 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-md hover:bg-gray-300 dark:hover:bg-gray-500">
+      <i class="fas fa-arrow-left"></i> Voltar
+    </a>
+  </div>
+  
+  <div class="chat-container">
+    <div class="chat-messages" id="chat-messages">
+      <% if (mensagens && mensagens.length > 0) { %>
+        <% mensagens.forEach(mensagem => { %>
+          <div class="message <%= mensagem.remetente_id === user.id ? 'sent' : 'received' %>">
+            <div class="message-text"><%= mensagem.mensagem %></div>
+            <div class="message-info">
+              <%= mensagem.remetente_id === user.id ? 'Você' : mensagem.remetente_name %> - 
+              <%= new Date(mensagem.data_envio).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) %>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <div class="text-center text-gray-500 dark:text-gray-400 my-auto py-4">Nenhuma mensagem ainda. Envie a primeira mensagem!</div>
+      <% } %>
     </div>
     
-    <div class="chat-container">
-      <div class="chat-messages" id="chat-messages">
-        <% if (mensagens && mensagens.length > 0) { %>
-          <% mensagens.forEach(mensagem => { %>
-            <div class="message <%= mensagem.remetente_id === user.id ? 'sent' : 'received' %>">
-              <div class="message-text"><%= mensagem.mensagem %></div>
-              <div class="message-info">
-                <%= mensagem.remetente_id === user.id ? 'Você' : mensagem.remetente_name %> - 
-                <%= new Date(mensagem.data_envio).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'}) %>
-              </div>
-            </div>
-          <% }); %>
-        <% } else { %>
-          <div class="text-center text-muted my-auto py-4">Nenhuma mensagem ainda. Envie a primeira mensagem!</div>
-        <% } %>
-      </div>
-      
-      <div class="chat-input-container">
-        <form id="message-form" action="/chat/enviar-mensagem" method="POST">
-          <input type="hidden" name="conversa_id" value="<%= conversa.id %>">
-          <div class="input-group">
-            <input type="text" class="form-control" id="message-input" name="mensagem" 
-                   placeholder="Digite sua mensagem..." autocomplete="off" required>
-            <button class="btn btn-primary" type="submit">
-              <i class="fas fa-paper-plane"></i>
-            </button>
-          </div>
-        </form>
-      </div>
+    <div class="chat-input-container">
+      <form id="message-form" class="flex gap-2" action="/chat/enviar-mensagem" method="POST">
+        <input type="hidden" name="conversa_id" value="<%= conversa.id %>">
+        <input type="text" class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-800 dark:text-white" 
+               id="message-input" name="mensagem" placeholder="Digite sua mensagem..." autocomplete="off" required>
+        <button class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md" type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
     </div>
-  </main>
-  
-  <%- include('partials/footer'); %>
+  </div>
   
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   
