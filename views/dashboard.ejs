@@ -13,6 +13,9 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
+  
+
   </style>
 </head>
 <body class="bg-gray-50">
@@ -144,11 +147,26 @@
                     <tr class="hover:bg-gray-50 transition-colors duration-150">
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
-                          <div class="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center text-white font-medium">
-                            <%= ocorrencia.user_name.charAt(0).toUpperCase() %>
+                          <div class="flex-shrink-0 h-10 w-10">
+                            <% if (ocorrencia.user_profile_picture) { %>
+                              <img class="h-10 w-10 rounded-full object-cover " 
+                                   src="<%= ocorrencia.user_profile_picture %>" 
+                                   alt="<%= ocorrencia.user_name %>">
+                            <% } else { %>
+                              <div class="h-10 w-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold shadow-sm">
+                                <%= ocorrencia.user_name.charAt(0).toUpperCase() %>
+                              </div>
+                            <% } %>
                           </div>
-                          <div class="ml-3">
-                            <p class="text-sm font-medium text-gray-900"><%= ocorrencia.user_name %></p>
+                          <div class="ml-4">
+                            <div class="flex flex-col">
+                              <a href="/perfil/<%= ocorrencia.user_id %>" class="text-sm font-semibold text-gray-900 hover:text-indigo-600 transition-colors duration-200">
+                                <%= ocorrencia.user_name %>
+                              </a>
+                              <% if (ocorrencia.user_email) { %>
+                                <span class="text-xs text-gray-500 mt-0.5"><%= ocorrencia.user_email %></span>
+                              <% } %>
+                            </div>
                           </div>
                         </div>
                       </td>

@@ -152,8 +152,16 @@
                                 <tr class="hover:bg-gray-50 transition duration-150">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-semibold">
-                                                <%= ocorrencia.user_name.charAt(0).toUpperCase() %>
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <% if (ocorrencia.user_profile_picture) { %>
+                                                    <img class="h-10 w-10 rounded-full object-cover" 
+                                                         src="<%= ocorrencia.user_profile_picture %>" 
+                                                         alt="<%= ocorrencia.user_name %>">
+                                                <% } else { %>
+                                                    <div class="h-10 w-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-semibold">
+                                                        <%= ocorrencia.user_name.charAt(0).toUpperCase() %>
+                                                    </div>
+                                                <% } %>
                                             </div>
                                             <div class="ml-4">
                                                 <div class="text-sm font-medium text-gray-900"><%= ocorrencia.user_name %></div>

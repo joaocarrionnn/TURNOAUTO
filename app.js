@@ -140,10 +140,10 @@ app.get('/', requireAuth, (req, res) => {
                 
                 // Busca as últimas 5 ocorrências (de todos os usuários)
                 db.query(
-                  `SELECT o.*, u.name as user_name 
-                   FROM ocorrencias o
-                   JOIN users u ON o.user_id = u.id
-                   ORDER BY o.data_criacao DESC LIMIT 5`,
+                  `SELECT o.*, u.name as user_name, u.profile_picture as user_profile_picture 
+                  FROM ocorrencias o
+                  JOIN users u ON o.user_id = u.id
+                  ORDER BY o.data_criacao DESC LIMIT 5`,
                   (err, ocorrenciasResults) => {
                     if (err) {
                       console.error('Erro ao buscar ocorrências:', err);
@@ -323,7 +323,7 @@ app.get('/', requireAuth, (req, res) => {
 
 app.get('/ocorrencias', requireAuth, (req, res) => {
   db.query(
-    `SELECT o.*, u.name as user_name 
+    `SELECT o.*, u.name as user_name, u.profile_picture as user_profile_picture 
      FROM ocorrencias o
      JOIN users u ON o.user_id = u.id
      ORDER BY o.data_criacao DESC`,
@@ -1276,6 +1276,104 @@ app.post('/perfil/remover-foto', requireAuth, (req, res) => {
           }
         );
       });
+    }
+  );
+});
+
+
+// Rota para visualizar perfil de qualquer usuário
+app.get('/perfil/:user_id', requireAuth, (req, res) => {
+  const userId = req.params.user_id;
+  
+  db.query(
+    'SELECT id, name, email, role, profile_picture FROM users WHERE id = ?',
+    [userId],
+    (err, results) => {
+      if (err || results.length === 0) {
+        console.error(err);
+        return res.status(404).send('Usuário não encontrado');
+      }
+      
+      const userData = results[0];
+      res.render('perfil-visualizacao', {
+        title: 'Perfil de ' + userData.name,
+        user: req.session.user,
+        profile: userData
+      });
+    }
+  );
+});
+
+// Rota para promover/remover admin
+app.post('/admin/promote/:user_id', requireAdmin, (req, res) => {
+  const userId = req.params.user_id;
+  
+  // Primeiro verifica o papel atual do usuário
+  db.query(
+    'SELECT role FROM users WHERE id = ?',
+    [userId],
+    (err, results) => {
+      if (err || results.length === 0) {
+        return res.status(404).json({ error: 'Usuário não encontrado' });
+      }
+      
+      const newRole = results[0].role === 'admin' ? 'user' : 'admin';
+      
+      // Atualiza o papel
+      db.query(
+        'UPDATE users SET role = ? WHERE id = ?',
+        [newRole, userId],
+        (err, result) => {
+          if (err) {
+            return res.status(500).json({ error: 'Erro ao atualizar papel do usuário' });
+          }
+          
+          res.redirect(`/perfil/${userId}?success=Permissões atualizadas com sucesso`);
+        }
+      );
+    }
+  );
+});
+
+// Rota para iniciar/conversar com um usuário específico
+app.get('/chat/conversa-com/:user_id', requireAuth, (req, res) => {
+  const otherUserId = req.params.user_id;
+  const currentUserId = req.session.user.id;
+
+  // Verifica se já existe uma conversa entre esses usuários
+  db.query(
+    `SELECT id FROM conversas 
+     WHERE (usuario1_id = ? AND usuario2_id = ?) 
+     OR (usuario1_id = ? AND usuario2_id = ?)`,
+    [currentUserId, otherUserId, otherUserId, currentUserId],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.redirect('/chat?error=Erro ao buscar conversa');
+      }
+
+      if (results.length > 0) {
+        // Redireciona para a conversa existente
+        return res.redirect(`/chat/conversa/${results[0].id}`);
+      }
+
+      // Cria nova conversa
+      const usuario1_id = Math.min(currentUserId, otherUserId);
+      const usuario2_id = Math.max(currentUserId, otherUserId);
+      
+      db.query(
+        'INSERT INTO conversas (usuario1_id, usuario2_id) VALUES (?, ?)',
+        [usuario1_id, usuario2_id],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.redirect('/chat?error=Erro ao criar conversa');
+          }
+          
+          // Redireciona para a nova conversa
+          res.redirect(`/chat/conversa/${result.insertId}`);
+        }
+      );
     }
   );
 });
