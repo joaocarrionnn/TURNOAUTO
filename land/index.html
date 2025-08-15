@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR" x-data="{ mobileMenuOpen: false, dropdownOpen: false }" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TURNOAUTO - Solução para Gestão de Ocorrências</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Animate.css para animações -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #10b981;
+      --dark: #1e293b;
+      --light: #f8fafc;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .nav-link {
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background-color: var(--primary);
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .dropdown-enter {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    
+    .dropdown-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.2s ease-out;
+    }
+    
+    .dropdown-exit {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .dropdown-exit-active {
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.2s ease-in;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-90">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-20 items-center">
+        <!-- Logo -->
+        <div class="flex-shrink-0 flex items-center">
+          <a href="#hero" class="flex items-center space-x-2">
+            <img class="h-10 w-auto" src="1092602a-25a4-469e-9be0-edcbf62d8e26-removebg-preview.png" alt="TurnoAuto Logo">
+
+          </a>
+        </div>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#features" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Funcionalidades</a>
+          <a href="#how-it-works" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Como Funciona</a>
+          
+          <!-- Dropdown -->
+            <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-300">
+                <span>Recursos</span>
+                <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'transform rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                </button>
+                
+                <div x-show="open" 
+                    @click.away="open = false" 
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 translate-y-1"
+                    x-transition:enter-end="opacity-100 translate-y-0"
+                    x-transition:leave="transition ease-in duration-150"
+                    x-transition:leave-start="opacity-100 translate-y-0"
+                    x-transition:leave-end="opacity-0 translate-y-1"
+                    class="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
+                <a href="#checklists" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Checklists de Segurança</a>
+                <a href="#alerts" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Sistema de Alertas</a>
+                <a href="#reports" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Relatórios Automáticos</a>
+                </div>
+            </div>
+          
+          <a href="#pricing" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Planos</a>
+          <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Contato</a>
+        </div>
+        
+        <!-- CTA Buttons Desktop -->
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/login" class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors duration-300">Login</a>
+          <a href="/register" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">
+            Comece Agora
+          </a>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <div class="md:hidden flex items-center">
+          <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out" aria-controls="mobile-menu" aria-expanded="false">
+            <span class="sr-only">Abrir menu</span>
+            <svg class="h-6 w-6" :class="{ 'hidden': mobileMenuOpen, 'block': !mobileMenuOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg class="h-6 w-6" :class="{ 'hidden': !mobileMenuOpen, 'block': mobileMenuOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div class="md:hidden" x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-100 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
+        <a href="#features" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Funcionalidades</a>
+        <a href="#how-it-works" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Como Funciona</a>
+        
+        <!-- Mobile Dropdown -->
+        <div x-data="{ mobileDropdownOpen: false }" class="relative">
+          <button @click="mobileDropdownOpen = !mobileDropdownOpen" class="w-full flex justify-between items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">
+            <span>Recursos</span>
+            <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'transform rotate-180': mobileDropdownOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+          
+          <div x-show="mobileDropdownOpen" class="pl-4 mt-1 space-y-1">
+            <a href="#checklists" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Checklists</a>
+            <a href="#alerts" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Alertas</a>
+            <a href="#reports" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Relatórios</a>
+          </div>
+        </div>
+        
+        <a href="#pricing" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Planos</a>
+        <a href="#contact" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Contato</a>
+        
+        <div class="pt-4 pb-2 border-t border-gray-200">
+          <div class="flex items-center px-5 space-x-3">
+            <a href="/login" class="w-full px-4 py-2 text-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors duration-300 border border-blue-600 rounded-md">Login</a>
+            <a href="/register" class="w-full px-4 py-2 text-center text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-300 shadow-sm">
+              Cadastre-se
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Resto do conteúdo da landing page virá aqui -->
+  
+  <script>
+    // Adicionando efeito de scroll suave para todos os links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
