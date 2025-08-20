@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TURNOAUTO - Solução para Gestão de Ocorrências</title>
+  <title>TURNOAUTO - Sistema de Gestão de Ocorrências e Checklist</title>
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Alpine JS -->
@@ -17,6 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    /* Estilos mantidos (os mesmos do código original) */
     :root {
       --primary: #3b82f6;
       --primary-dark: #2563eb;
@@ -299,11 +300,11 @@
         <!-- Hero Content -->
         <div class="text-center lg:text-left">
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 animate__animated animate__fadeInUp">
-            Revolucione a gestão de 
-            <span class="text-yellow-300">ocorrências automotivas</span>
+            Sistema completo para 
+            <span class="text-yellow-300">gestão de ocorrências</span>
           </h1>
           <p class="text-xl text-blue-100 mb-8 max-w-lg mx-auto lg:mx-0 animate__animated animate__fadeInUp animate__delay-1s">
-            Sistema completo para registro, acompanhamento e análise de ocorrências em frotas veiculares. Reduza custos e aumente a segurança.
+            Ferramenta especializada para funcionários registrarem ocorrências, realizar checklists de segurança e monitorar alertas em tempo real.
           </p>
           
           <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate__animated animate__fadeInUp animate__delay-2s">
@@ -323,7 +324,7 @@
               <img class="w-12 h-12 border-2 border-white rounded-full" src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="User 3">
             </div>
             <div class="ml-4">
-              <p class="text-white font-medium">+500 empresas</p>
+              <p class="text-white font-medium">+200 empresas</p>
               <p class="text-blue-200 text-sm">utilizam nossa solução</p>
             </div>
           </div>
@@ -345,18 +346,19 @@
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Ocorrência</label>
                   <div class="flex space-x-2">
-                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Colisão</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Avaria</span>
-                    <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Pane</span>
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Problema Técnico</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Segurança</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Outros</span>
                   </div>
                 </div>
                 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Veículo</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Local/Setor</label>
                   <div class="relative">
                     <select class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                      <option>VW Delivery - ABC1D23</option>
-                      <option>Mercedes Atego - DEF4G56</option>
+                      <option>Produção - Linha A</option>
+                      <option>Almoxarifado - Setor B</option>
+                      <option>Expedição - Docas</option>
                     </select>
                   </div>
                 </div>
@@ -391,7 +393,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Funcionalidades Principais</h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Descubra como o TURNOAUTO pode transformar a gestão da sua frota</p>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Tudo que sua equipe precisa para registrar e gerenciar ocorrências com eficiência</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -400,20 +402,20 @@
           <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
             <i class="fas fa-clipboard-list text-blue-600 text-2xl"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-3">Checklists Digitais</h3>
-          <p class="text-gray-600 mb-4">Checklists personalizáveis para vistoria de veículos com registro fotográfico e assinatura digital.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Registro de Ocorrências</h3>
+          <p class="text-gray-600 mb-4">Sistema intuitivo para registro detalhado de incidentes, problemas e observações durante o turno de trabalho.</p>
           <ul class="space-y-2">
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Pré-viagem e pós-viagem</span>
+              <span class="text-gray-600">Categorização por tipo</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Relatórios automáticos</span>
+              <span class="text-gray-600">Upload de fotos e documentos</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Alertas de não conformidade</span>
+              <span class="text-gray-600">Registro de localização e horário</span>
             </li>
           </ul>
         </div>
@@ -421,22 +423,22 @@
         <!-- Feature 2 -->
         <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
           <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-            <i class="fas fa-bell text-blue-600 text-2xl"></i>
+            <i class="fas fa-clipboard-check text-blue-600 text-2xl"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-3">Sistema de Alertas</h3>
-          <p class="text-gray-600 mb-4">Notificações inteligentes para manutenções preventivas, documentação vencida e ocorrências críticas.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Checklists de Segurança</h3>
+          <p class="text-gray-600 mb-4">Listas de verificação personalizáveis para garantir conformidade com normas de segurança e procedimentos operacionais.</p>
           <ul class="space-y-2">
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Alertas em tempo real</span>
+              <span class="text-gray-600">Checklists pré-turno e pós-turno</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Comunicação multi-canal</span>
+              <span class="text-gray-600">Assinatura digital</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Priorização inteligente</span>
+              <span class="text-gray-600">Validação em tempo real</span>
             </li>
           </ul>
         </div>
@@ -444,22 +446,22 @@
         <!-- Feature 3 -->
         <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
           <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-            <i class="fas fa-chart-pie text-blue-600 text-2xl"></i>
+            <i class="fas fa-bell text-blue-600 text-2xl"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-3">Relatórios Automáticos</h3>
-          <p class="text-gray-600 mb-4">Dashboard completo with indicadores de desempenho, custos por veículo e análise de ocorrências.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Sistema de Alertas</h3>
+          <p class="text-gray-600 mb-4">Notificações em tempo real para situações críticas, prazos de validade e necessidades de intervenção imediata.</p>
           <ul class="space-y-2">
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Relatórios personalizáveis</span>
+              <span class="text-gray-600">Alertas prioritários</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Exportação em múltiplos formatos</span>
+              <span class="text-gray-600">Notificações por e-mail e app</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Análise preditiva</span>
+              <span class="text-gray-600">Acompanhamento de status</span>
             </li>
           </ul>
         </div>
@@ -467,22 +469,22 @@
         <!-- Feature 4 -->
         <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
           <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-            <i class="fas fa-map-marker-alt text-blue-600 text-2xl"></i>
+            <i class="fas fa-chart-pie text-blue-600 text-2xl"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-3">Registro Georreferenciado</h3>
-          <p class="text-gray-600 mb-4">Registro automático da localização de cada ocorrência para melhor acompanhamento e análise.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Relatórios Automáticos</h3>
+          <p class="text-gray-600 mb-4">Geração automática de relatórios de ocorrências, checklist e indicadores de desempenho operacional.</p>
           <ul class="space-y-2">
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Mapa de calor de ocorrências</span>
+              <span class="text-gray-600">Relatórios por período</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Rotas e trajetos</span>
+              <span class="text-gray-600">Exportação em PDF/Excel</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Integração com GPS</span>
+              <span class="text-gray-600">Gráficos e estatísticas</span>
             </li>
           </ul>
         </div>
@@ -493,7 +495,7 @@
             <i class="fas fa-mobile-alt text-blue-600 text-2xl"></i>
           </div>
           <h3 class="text-xl font-bold text-gray-900 mb-3">Aplicativo Mobile</h3>
-          <p class="text-gray-600 mb-4">Registro de ocorrências em tempo real, mesmo sem conexão com a internet.</p>
+          <p class="text-gray-600 mb-4">Registro de ocorrências e checklists diretamente do celular, mesmo sem conexão com a internet.</p>
           <ul class="space-y-2">
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
@@ -505,7 +507,7 @@
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Interface intuitiva</span>
+              <span class="text-gray-600">Interface amigável</span>
             </li>
           </ul>
         </div>
@@ -513,18 +515,18 @@
         <!-- Feature 6 -->
         <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
           <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-            <i class="fas fa-lock text-blue-600 text-2xl"></i>
+            <i class="fas fa-user-shield text-blue-600 text-2xl"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-3">Segurança de Dados</h3>
-          <p class="text-gray-600 mb-4">Seus dados protegidos com criptografia de ponta a ponta e backups automáticos.</p>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Controle de Acesso</h3>
+          <p class="text-gray-600 mb-4">Sistema hierárquico de permissões para diferentes níveis de usuários dentro da organização.</p>
           <ul class="space-y-2">
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Conformidade com LGPD</span>
+              <span class="text-gray-600">Perfis por função</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              <span class="text-gray-600">Acesso hierárquico</span>
+              <span class="text-gray-600">Acesso restrito a dados sensíveis</span>
             </li>
             <li class="flex items-center">
               <i class="fas fa-check-circle text-green-500 mr-2"></i>
@@ -541,21 +543,21 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Como Funciona</h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Implemente a solução em 4 passos simples e comece a otimizar sua gestão</p>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Implemente a solução em 4 passos simples e melhore a gestão de ocorrências</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div class="relative">
           <div class="floating">
-            <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                 alt="App TURNOAUTO em uso" 
+            <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                 alt="Funcionário usando o TURNOAUTO" 
                  class="rounded-2xl shadow-xl">
           </div>
           <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-blue-500 rounded-lg z-10 shadow-lg flex items-center justify-center">
-            <i class="fas fa-mobile-alt text-white text-3xl"></i>
+            <i class="fas fa-clipboard-check text-white text-3xl"></i>
           </div>
           <div class="absolute -top-6 -right-6 w-20 h-20 bg-yellow-400 rounded-lg z-10 shadow-lg flex items-center justify-center">
-            <i class="fas fa-chart-line text-white text-2xl"></i>
+            <i class="fas fa-bell text-white text-2xl"></i>
           </div>
         </div>
 
@@ -568,7 +570,7 @@
               </div>
               <div class="ml-6">
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Cadastro e Configuração</h3>
-                <p class="text-gray-600">Cadastre sua frota, funcionários e personalize os checklists de acordo com suas necessidades.</p>
+                <p class="text-gray-600">Configure sua empresa, setores, equipes e personalize os tipos de ocorrências e checklists.</p>
               </div>
             </div>
 
@@ -579,7 +581,7 @@
               </div>
               <div class="ml-6">
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Treinamento da Equipe</h3>
-                <p class="text-gray-600">Nossa equipe treina seus colaboradores para utilização do aplicativo e gestão das ocorrências.</p>
+                <p class="text-gray-600">Treine seus colaboradores para utilizar o sistema de registro de ocorrências e checklists.</p>
               </div>
             </div>
 
@@ -589,8 +591,8 @@
                 <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">3</div>
               </div>
               <div class="ml-6">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Uso do Aplicativo</h3>
-                <p class="text-gray-600">Motoristas e equipe de manutenção registram as ocorrências em tempo real através do app mobile.</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Uso no Dia a Dia</h3>
+                <p class="text-gray-600">Funcionários registram ocorrências e realizam checklists através do app ou computador.</p>
               </div>
             </div>
 
@@ -600,8 +602,8 @@
                 <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">4</div>
               </div>
               <div class="ml-6">
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Análise e Melhorias</h3>
-                <p class="text-gray-600">Acesse relatórios detalhados e insights para reduzir custos e aumentar a segurança operacional.</p>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Monitoramento e Ação</h3>
+                <p class="text-gray-600">Gestores acompanham alertas, analisam relatórios e tomam ações corretivas.</p>
               </div>
             </div>
           </div>
@@ -617,34 +619,176 @@
     </div>
   </section>
 
+  <!-- Checklists Section -->
+  <section id="checklists" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Checklists de Segurança</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Sistema completo de listas de verificação para garantir a conformidade e segurança</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="bg-gray-50 rounded-2xl p-8 shadow-lg">
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">Checklists Personalizáveis</h3>
+            
+            <div class="space-y-6">
+              <div class="flex items-start">
+                <div class="flex-shrink-0 mt-1">
+                  <i class="fas fa-check-circle text-green-500"></i>
+                </div>
+                <div class="ml-4">
+                  <h4 class="font-semibold text-gray-900">Checklist de Abertura de Turno</h4>
+                  <p class="text-gray-600">Verificação de equipamentos, segurança e condições do ambiente antes do início das atividades.</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="flex-shrink-0 mt-1">
+                  <i class="fas fa-check-circle text-green-500"></i>
+                </div>
+                <div class="ml-4">
+                  <h4 class="font-semibold text-gray-900">Checklist de Encerramento</h4>
+                  <p class="text-gray-600">Verificação de encerramento com registro de condições ao final do turno.</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="flex-shrink-0 mt-1">
+                  <i class="fas fa-check-circle text-green-500"></i>
+                </div>
+                <div class="ml-4">
+                  <h4 class="font-semibold text-gray-900">Checklists Específicos</h4>
+                  <p class="text-gray-600">Listas especializadas por área, equipamento ou tipo de atividade.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+               alt="Checklist de segurança" 
+               class="rounded-2xl shadow-xl">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alerts Section -->
+  <section id="alerts" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Sistema de Alertas Inteligentes</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Notificações em tempo real para situações que exigem atenção imediata</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Alertas Críticos</h3>
+          <p class="text-gray-600">Notificações para situações de emergência que requerem ação imediata.</p>
+        </div>
+        
+        <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+          <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-clock text-yellow-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Alertas de Prazo</h3>
+          <p class="text-gray-600">Avisos sobre prazos de validade, vencimentos e periodicidades.</p>
+        </div>
+        
+        <div class="bg-white rounded-xl p-6 shadow-lg text-center">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-tasks text-blue-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Alertas de Pendências</h3>
+          <p class="text-gray-600">Notificações sobre checklists não realizados ou ocorrências pendentes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  
+  <section id="reports" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Relatórios e Análises</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Dados organizados para tomada de decisão estratégica</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+        <div class="lg:col-span-2">
+          <img src="Captura de tela .png" 
+               alt="Relatórios e gráficos" 
+               class="w-full h-auto rounded-2xl shadow-xl"
+               >
+        </div>
+        
+        <div>
+          <div class="space-y-6">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 mt-1">
+                <i class="fas fa-chart-bar text-blue-500"></i>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Relatórios de Ocorrências</h3>
+                <p class="text-gray-600">Análise detalhada por tipo, setor, período e gravidade das ocorrências registradas.</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 mt-1">
+                <i class="fas fa-clipboard-list text-green-500"></i>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Relatórios de Checklist</h3>
+                <p class="text-gray-600">Acompanhamento de conformidade e taxa de adesão aos checklists de segurança.</p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 mt-1">
+                <i class="fas fa-tachometer-alt text-purple-500"></i>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Indicadores de Desempenho</h3>
+                <p class="text-gray-600">KPIs personalizados para medir a eficiência operacional e a gestão de ocorrências.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Pricing Section -->
-  <section id="pricing" class="py-20 bg-white">
+  <section id="pricing" class="py-20 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Planos e Preços</h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Escolha o plano ideal para o tamanho da sua frota</p>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Escolha o plano ideal para o tamanho da sua empresa</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Plano Básico -->
-        <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
           <div class="p-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Plano Básico</h3>
-            <p class="text-gray-600 mb-6">Ideal para frotas de até 10 veículos</p>
+            <p class="text-gray-600 mb-6">Ideal para pequenas empresas</p>
             
             <div class="mb-6">
-              <span class="text-4xl font-bold text-gray-900">R$ 199</span>
+              <span class="text-4xl font-bold text-gray-900">R$ 99</span>
               <span class="text-gray-600">/mês</span>
             </div>
             
             <ul class="space-y-4 mb-8">
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <span>Até 10 veículos</span>
-              </li>
-              <li class="flex items-center">
-                <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <span>Checklists ilimitados</span>
+                <span>Até 10 usuários</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
@@ -652,7 +796,11 @@
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <span>Relatórios básicos</span>
+                <span>Checklists básicos</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Relatórios simples</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-times-circle text-red-400 mr-3"></i>
@@ -677,21 +825,17 @@
           </div>
           <div class="p-8">
             <h3 class="text-2xl font-bold text-white mb-2">Plano Profissional</h3>
-            <p class="text-blue-100 mb-6">Ideal para frotas de 11 a 50 veículos</p>
+            <p class="text-blue-100 mb-6">Ideal para médias empresas</p>
             
             <div class="mb-6">
-              <span class="text-4xl font-bold text-white">R$ 449</span>
+              <span class="text-4xl font-bold text-white">R$ 299</span>
               <span class="text-blue-100">/mês</span>
             </div>
             
             <ul class="space-y-4 mb-8">
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
-                <span class="text-white">Até 50 veículos</span>
-              </li>
-              <li class="flex items-center">
-                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
-                <span class="text-white">Checklists personalizáveis</span>
+                <span class="text-white">Até 50 usuários</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
@@ -699,11 +843,15 @@
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
+                <span class="text-white">Checklists personalizáveis</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
                 <span class="text-white">Relatórios detalhados</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
-                <span class="text-white">Alertas automáticos</span>
+                <span class="text-white">Sistema de alertas</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
@@ -718,10 +866,10 @@
         </div>
 
         <!-- Plano Enterprise -->
-        <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
+        <div class="bg-white rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
           <div class="p-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Plano Enterprise</h3>
-            <p class="text-gray-600 mb-6">Para frotas com mais de 50 veículos</p>
+            <p class="text-gray-600 mb-6">Para grandes corporações</p>
             
             <div class="mb-6">
               <span class="text-4xl font-bold text-gray-900">Sob consulta</span>
@@ -730,11 +878,7 @@
             <ul class="space-y-4 mb-8">
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <span>Veículos ilimitados</span>
-              </li>
-              <li class="flex items-center">
-                <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <span>Checklists personalizáveis</span>
+                <span>Usuários ilimitados</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
@@ -742,11 +886,15 @@
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <span>Relatórios avançados</span>
+                <span>Checklists avançados</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
-                <span>Alertas automáticos</span>
+                <span>Relatórios personalizados</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Sistema de alertas</span>
               </li>
               <li class="flex items-center">
                 <i class="fas fa-check-circle text-green-500 mr-3"></i>
@@ -768,7 +916,7 @@
   </section>
 
   <!-- Contact Section -->
-  <section id="contact" class="py-20 bg-gray-50">
+  <section id="contact" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-16">
         <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Entre em Contato</h2>
@@ -794,12 +942,12 @@
             </div>
 
             <div>
-              <label for="vehicles" class="block text-sm font-medium text-gray-700 mb-1">Quantidade de Veículos</label>
-              <select id="vehicles" name="vehicles" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                <option value="1-10">1-10 veículos</option>
-                <option value="11-50">11-50 veículos</option>
-                <option value="51-100">51-100 veículos</option>
-                <option value="100+">Mais de 100 veículos</option>
+              <label for="employees" class="block text-sm font-medium text-gray-700 mb-1">Número de Funcionários</label>
+              <select id="employees" name="employees" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                <option value="1-10">1-10 funcionários</option>
+                <option value="11-50">11-50 funcionários</option>
+                <option value="51-100">51-100 funcionários</option>
+                <option value="100+">Mais de 100 funcionários</option>
               </select>
             </div>
 
@@ -891,7 +1039,7 @@
             </div>
             <span class="text-xl font-bold">TURNO<span class="text-blue-400">AUTO</span></span>
           </a>
-          <p class="text-gray-400 mb-6">Solução completa para gestão de ocorrências em frotas veiculares.</p>
+          <p class="text-gray-400 mb-6">Sistema completo para gestão de ocorrências e checklists de segurança.</p>
           <div class="flex space-x-4">
             <a href="#" class="text-gray-400 hover:text-white">
               <i class="fab fa-facebook-f"></i>
