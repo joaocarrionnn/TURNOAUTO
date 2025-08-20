@@ -29,6 +29,30 @@
       font-family: 'Inter', sans-serif;
     }
     
+    .hero-gradient {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .pulse-ring {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(59, 130, 246, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+    
     .nav-link {
       position: relative;
     }
@@ -40,7 +64,7 @@
       height: 2px;
       bottom: -2px;
       left: 0;
-      background-color: var(--primary);
+      background-color: #3b82f6;
       transition: width 0.3s ease;
     }
     
@@ -48,78 +72,126 @@
       width: 100%;
     }
     
-    .dropdown-enter {
-      opacity: 0;
+    .feature-card:hover {
       transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
     
-    .dropdown-enter-active {
-      opacity: 1;
-      transform: translateY(0);
-      transition: all 0.2s ease-out;
+    /* Animações para o menu mobile em tela cheia */
+    .mobile-menu-fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 100;
+      overflow-y: auto;
     }
     
-    .dropdown-exit {
-      opacity: 1;
-      transform: translateY(0);
+    .menu-slide-in {
+      animation: slideIn 0.5s forwards ease-out;
     }
     
-    .dropdown-exit-active {
+    .menu-slide-out {
+      animation: slideOut 0.4s forwards ease-in;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
+    }
+    
+    .menu-item-animation {
       opacity: 0;
-      transform: translateY(-10px);
-      transition: all 0.2s ease-in;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s forwards;
     }
+    
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Atrasos para cada item do menu */
+    .menu-item-delay-1 { animation-delay: 0.1s; }
+    .menu-item-delay-2 { animation-delay: 0.2s; }
+    .menu-item-delay-3 { animation-delay: 0.3s; }
+    .menu-item-delay-4 { animation-delay: 0.4s; }
+    .menu-item-delay-5 { animation-delay: 0.5s; }
+    .menu-item-delay-6 { animation-delay: 0.6s; }
+    .menu-item-delay-7 { animation-delay: 0.7s; }
   </style>
 </head>
 <body class="bg-gray-50">
-  <!-- Navigation -->
-  <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-90">
+  <!-- Navigation com fundo transparente -->
+  <nav class="bg-transparent absolute w-full z-50 backdrop-blur-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-20 items-center">
         <!-- Logo -->
         <div class="flex-shrink-0 flex items-center">
           <a href="#hero" class="flex items-center space-x-2">
-            <img class="h-10 w-auto" src="1092602a-25a4-469e-9be0-edcbf62d8e26-removebg-preview.png" alt="TurnoAuto Logo">
-
+            <div class="w-10 h-10  flex items-center justify-center">
+              <img class="" src="logo1.png"></img>
+            </div>
+            <span class="text-xl font-bold text-white">TURNO<span class="text-blue-400">AUTO</span></span>
           </a>
         </div>
         
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-8">
-          <a href="#features" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Funcionalidades</a>
-          <a href="#how-it-works" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Como Funciona</a>
+          <a href="#features" class="nav-link text-white hover:text-blue-300 px-3 py-2 text-sm font-medium transition-colors duration-300">Funcionalidades</a>
+          <a href="#how-it-works" class="nav-link text-white hover:text-blue-300 px-3 py-2 text-sm font-medium transition-colors duration-300">Como Funciona</a>
           
           <!-- Dropdown -->
-            <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-300">
-                <span>Recursos</span>
-                <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'transform rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-                </button>
-                
-                <div x-show="open" 
-                    @click.away="open = false" 
-                    x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 translate-y-1"
-                    x-transition:enter-end="opacity-100 translate-y-0"
-                    x-transition:leave="transition ease-in duration-150"
-                    x-transition:leave-start="opacity-100 translate-y-0"
-                    x-transition:leave-end="opacity-0 translate-y-1"
-                    class="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
-                <a href="#checklists" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Checklists de Segurança</a>
-                <a href="#alerts" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Sistema de Alertas</a>
-                <a href="#reports" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600">Relatórios Automáticos</a>
-                </div>
+          <div class="relative" x-data="{ open: false }">
+            <button @click="open = !open" class="nav-link text-white hover:text-blue-300 px-3 py-2 text-sm font-medium flex items-center space-x-1 transition-colors duration-300">
+              <span>Recursos</span>
+              <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'transform rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            
+            <div x-show="open" 
+                 @click.away="open = false" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 translate-y-1"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 translate-y-1"
+                 class="absolute left-0 mt-2 w-56 bg-gray-800 rounded-md shadow-lg py-1 z-50 border border-gray-700">
+              <a href="#checklists" class="block px-4 py-2 text-sm text-white hover:bg-blue-600 transition-colors duration-300">Checklists de Segurança</a>
+              <a href="#alerts" class="block px-4 py-2 text-sm text-white hover:bg-blue-600 transition-colors duration-300">Sistema de Alertas</a>
+              <a href="#reports" class="block px-4 py-2 text-sm text-white hover:bg-blue-600 transition-colors duration-300">Relatórios Automáticos</a>
             </div>
+          </div>
           
-          <a href="#pricing" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Planos</a>
-          <a href="#contact" class="nav-link text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-300">Contato</a>
+          <a href="#pricing" class="nav-link text-white hover:text-blue-300 px-3 py-2 text-sm font-medium transition-colors duration-300">Planos</a>
+          <a href="#contact" class="nav-link text-white hover:text-blue-300 px-3 py-2 text-sm font-medium transition-colors duration-300">Contato</a>
         </div>
         
         <!-- CTA Buttons Desktop -->
         <div class="hidden md:flex items-center space-x-4">
-          <a href="/login" class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors duration-300">Login</a>
+          <a href="/login" class="px-4 py-2 text-sm font-medium text-white hover:text-blue-300 transition-colors duration-300">Login</a>
           <a href="/register" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors duration-300 shadow-sm hover:shadow-md">
             Comece Agora
           </a>
@@ -127,7 +199,7 @@
         
         <!-- Mobile menu button -->
         <div class="md:hidden flex items-center">
-          <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100 focus:outline-none transition duration-150 ease-in-out" aria-controls="mobile-menu" aria-expanded="false">
+          <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-blue-300 hover:bg-gray-800 focus:outline-none transition duration-150 ease-in-out" aria-controls="mobile-menu" aria-expanded="false">
             <span class="sr-only">Abrir menu</span>
             <svg class="h-6 w-6" :class="{ 'hidden': mobileMenuOpen, 'block': !mobileMenuOpen }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -140,45 +212,742 @@
       </div>
     </div>
     
-    <!-- Mobile Navigation -->
-    <div class="md:hidden" x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-100 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75 transform" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
-      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
-        <a href="#features" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Funcionalidades</a>
-        <a href="#how-it-works" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Como Funciona</a>
-        
-        <!-- Mobile Dropdown -->
-        <div x-data="{ mobileDropdownOpen: false }" class="relative">
-          <button @click="mobileDropdownOpen = !mobileDropdownOpen" class="w-full flex justify-between items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">
-            <span>Recursos</span>
-            <svg class="w-4 h-4 transition-transform duration-200" :class="{ 'transform rotate-180': mobileDropdownOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    <!-- Mobile Navigation - Modificado para tela cheia -->
+    <div class="md:hidden mobile-menu-fullscreen bg-gray-900" 
+         x-show="mobileMenuOpen" 
+         x-transition:enter="menu-slide-in"
+         x-transition:leave="menu-slide-out"
+         style="display: none;">
+      <div class="h-full flex flex-col px-6 py-8">
+        <!-- Cabeçalho do menu mobile -->
+        <div class="flex justify-between items-center mb-10">
+          <a href="#hero" class="flex items-center space-x-2" @click="mobileMenuOpen = false">
+            <div class="w-10 h-10 flex items-center justify-center">
+              <img src="logo1.png" alt="Logo TURNOAUTO">
+            </div>
+            <span class="text-xl font-bold text-white">TURNO<span class="text-blue-400">AUTO</span></span>
+          </a>
+          <button @click="mobileMenuOpen = false" class="text-white p-2 rounded-full hover:bg-gray-800 transition-colors">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          
-          <div x-show="mobileDropdownOpen" class="pl-4 mt-1 space-y-1">
-            <a href="#checklists" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Checklists</a>
-            <a href="#alerts" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Alertas</a>
-            <a href="#reports" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Relatórios</a>
-          </div>
         </div>
         
-        <a href="#pricing" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Planos</a>
-        <a href="#contact" @click="mobileMenuOpen = false" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-300">Contato</a>
-        
-        <div class="pt-4 pb-2 border-t border-gray-200">
-          <div class="flex items-center px-5 space-x-3">
-            <a href="/login" class="w-full px-4 py-2 text-center text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors duration-300 border border-blue-600 rounded-md">Login</a>
-            <a href="/register" class="w-full px-4 py-2 text-center text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors duration-300 shadow-sm">
-              Cadastre-se
-            </a>
+        <!-- Itens do menu com animações individuais -->
+        <div class="space-y-6 flex-grow">
+          <a href="#features" @click="mobileMenuOpen = false" class="menu-item-animation menu-item-delay-1 block text-xl font-medium text-white hover:text-blue-300 transition-colors duration-300 py-3 border-b border-gray-700">
+            Funcionalidades
+          </a>
+          <a href="#how-it-works" @click="mobileMenuOpen = false" class="menu-item-animation menu-item-delay-2 block text-xl font-medium text-white hover:text-blue-300 transition-colors duration-300 py-3 border-b border-gray-700">
+            Como Funciona
+          </a>
+          
+          <!-- Mobile Dropdown -->
+          <div x-data="{ mobileDropdownOpen: false }" class="relative menu-item-animation menu-item-delay-3">
+            <button @click="mobileDropdownOpen = !mobileDropdownOpen" class="w-full flex justify-between items-center text-xl font-medium text-white hover:text-blue-300 transition-colors duration-300 py-3 border-b border-gray-700">
+              <span>Recursos</span>
+              <svg class="w-5 h-5 transition-transform duration-200" :class="{ 'transform rotate-180': mobileDropdownOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            
+            <div x-show="mobileDropdownOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform -translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" class="pl-6 mt-2 space-y-4">
+              <a href="#checklists" @click="mobileMenuOpen = false" class="block text-lg font-medium text-gray-300 hover:text-blue-300 transition-colors duration-300">
+                Checklists de Segurança
+              </a>
+              <a href="#alerts" @click="mobileMenuOpen = false" class="block text-lg font-medium text-gray-300 hover:text-blue-300 transition-colors duration-300">
+                Sistema de Alertas
+              </a>
+              <a href="#reports" @click="mobileMenuOpen = false" class="block text-lg font-medium text-gray-300 hover:text-blue-300 transition-colors duration-300">
+                Relatórios Automáticos
+              </a>
+            </div>
           </div>
+          
+          <a href="#pricing" @click="mobileMenuOpen = false" class="menu-item-animation menu-item-delay-4 block text-xl font-medium text-white hover:text-blue-300 transition-colors duration-300 py-3 border-b border-gray-700">
+            Planos
+          </a>
+          <a href="#contact" @click="mobileMenuOpen = false" class="menu-item-animation menu-item-delay-5 block text-xl font-medium text-white hover:text-blue-300 transition-colors duration-300 py-3 border-b border-gray-700">
+            Contato
+          </a>
+        </div>
+        
+        <!-- Botões de ação no final do menu -->
+        <div class="pt-8 border-t border-gray-700 space-y-4 menu-item-animation menu-item-delay-6">
+          <a href="/login" @click="mobileMenuOpen = false" class="block w-full px-6 py-3 text-center text-lg font-medium text-white border border-blue-500 rounded-lg hover:bg-blue-500 transition-colors duration-300">
+            Login
+          </a>
+          <a href="/register" @click="mobileMenuOpen = false" class="menu-item-animation menu-item-delay-7 block w-full px-6 py-3 text-center text-lg font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors duration-300 shadow-sm">
+            Comece Agora
+          </a>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- Resto do conteúdo da landing page virá aqui -->
-  
+  <!-- Hero Section -->
+  <section id="hero" class="hero-gradient min-h-screen flex items-center pt-16 pb-24 overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-full opacity-10">
+      <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-white animate-pulse"></div>
+      <div class="absolute bottom-1/3 right-1/3 w-48 h-48 rounded-full bg-white animate-pulse" style="animation-delay: 1s"></div>
+      <div class="absolute top-1/3 right-1/4 w-32 h-32 rounded-full bg-white animate-pulse" style="animation-delay: 2s"></div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <!-- Hero Content -->
+        <div class="text-center lg:text-left">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 animate__animated animate__fadeInUp">
+            Revolucione a gestão de 
+            <span class="text-yellow-300">ocorrências automotivas</span>
+          </h1>
+          <p class="text-xl text-blue-100 mb-8 max-w-lg mx-auto lg:mx-0 animate__animated animate__fadeInUp animate__delay-1s">
+            Sistema completo para registro, acompanhamento e análise de ocorrências em frotas veiculares. Reduza custos e aumente a segurança.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate__animated animate__fadeInUp animate__delay-2s">
+            <a href="#demo" class=" px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex items-center justify-center">
+              <span>Solicitar Demonstração</span>
+              <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+            <a href="#features" class="px-8 py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition-all duration-300 transform hover:-translate-y-1">
+              Saiba Mais
+            </a>
+          </div>
+          
+          <div class="mt-12 flex items-center justify-center lg:justify-start animate__animated animate__fadeInUp animate__delay-3s">
+            <div class="flex -space-x-4">
+              <img class="w-12 h-12 border-2 border-white rounded-full" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="User 1">
+              <img class="w-12 h-12 border-2 border-white rounded-full" src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="User 2">
+              <img class="w-12 h-12 border-2 border-white rounded-full" src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="User 3">
+            </div>
+            <div class="ml-4">
+              <p class="text-white font-medium">+500 empresas</p>
+              <p class="text-blue-200 text-sm">utilizam nossa solução</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Hero Visual -->
+        <div class="relative hidden lg:block">
+          <div class="floating animate__animated animate__fadeInRight">
+            <div class="relative bg-white rounded-2xl shadow-2xl p-6 transform rotate-3">
+              <div class="absolute -top-3 -left-3 w-6 h-6 rounded-full bg-blue-500"></div>
+              <div class="absolute -bottom-3 -right-3 w-6 h-6 rounded-full bg-green-500"></div>
+              
+              <div class="mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Registro de Ocorrência</h3>
+                <div class="h-1 w-20 bg-blue-500 rounded-full"></div>
+              </div>
+              
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Ocorrência</label>
+                  <div class="flex space-x-2">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">Colisão</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Avaria</span>
+                    <span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">Pane</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Veículo</label>
+                  <div class="relative">
+                    <select class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                      <option>VW Delivery - ABC1D23</option>
+                      <option>Mercedes Atego - DEF4G56</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
+                  <textarea class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="2" placeholder="Descreva a ocorrência..."></textarea>
+                </div>
+                
+                <div class="flex justify-between items-center pt-4">
+                  <button class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-paperclip mr-1"></i> Anexar foto
+                  </button>
+                  <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
+                    Registrar Ocorrência
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Floating elements -->
+          <div class="absolute -top-6 -right-6 w-24 h-24 bg-yellow-400 rounded-full opacity-20 floating" style="animation-delay: 2s"></div>
+          <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-green-500 rounded-full opacity-20 floating" style="animation-delay: 4s"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Funcionalidades Principais</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Descubra como o TURNOAUTO pode transformar a gestão da sua frota</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
+          <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="fas fa-clipboard-list text-blue-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Checklists Digitais</h3>
+          <p class="text-gray-600 mb-4">Checklists personalizáveis para vistoria de veículos com registro fotográfico e assinatura digital.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Pré-viagem e pós-viagem</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Relatórios automáticos</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Alertas de não conformidade</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
+          <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="fas fa-bell text-blue-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Sistema de Alertas</h3>
+          <p class="text-gray-600 mb-4">Notificações inteligentes para manutenções preventivas, documentação vencida e ocorrências críticas.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Alertas em tempo real</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Comunicação multi-canal</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Priorização inteligente</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
+          <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="fas fa-chart-pie text-blue-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Relatórios Automáticos</h3>
+          <p class="text-gray-600 mb-4">Dashboard completo with indicadores de desempenho, custos por veículo e análise de ocorrências.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Relatórios personalizáveis</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Exportação em múltiplos formatos</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Análise preditiva</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
+          <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="fas fa-map-marker-alt text-blue-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Registro Georreferenciado</h3>
+          <p class="text-gray-600 mb-4">Registro automático da localização de cada ocorrência para melhor acompanhamento e análise.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Mapa de calor de ocorrências</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Rotas e trajetos</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Integração com GPS</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
+          <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="fas fa-mobile-alt text-blue-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Aplicativo Mobile</h3>
+          <p class="text-gray-600 mb-4">Registro de ocorrências em tempo real, mesmo sem conexão com a internet.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Funcionalidade offline</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Sincronização automática</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Interface intuitiva</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card bg-gray-50 rounded-xl p-8 transition-all duration-300 hover:shadow-xl">
+          <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+            <i class="fas fa-lock text-blue-600 text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Segurança de Dados</h3>
+          <p class="text-gray-600 mb-4">Seus dados protegidos com criptografia de ponta a ponta e backups automáticos.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Conformidade com LGPD</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Acesso hierárquico</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              <span class="text-gray-600">Auditoria de acesso</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Como Funciona</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Implemente a solução em 4 passos simples e comece a otimizar sua gestão</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div class="relative">
+          <div class="floating">
+            <img src="https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                 alt="App TURNOAUTO em uso" 
+                 class="rounded-2xl shadow-xl">
+          </div>
+          <div class="absolute -bottom-6 -left-6 w-24 h-24 bg-blue-500 rounded-lg z-10 shadow-lg flex items-center justify-center">
+            <i class="fas fa-mobile-alt text-white text-3xl"></i>
+          </div>
+          <div class="absolute -top-6 -right-6 w-20 h-20 bg-yellow-400 rounded-lg z-10 shadow-lg flex items-center justify-center">
+            <i class="fas fa-chart-line text-white text-2xl"></i>
+          </div>
+        </div>
+
+        <div>
+          <div class="space-y-12">
+            <!-- Step 1 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">1</div>
+              </div>
+              <div class="ml-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Cadastro e Configuração</h3>
+                <p class="text-gray-600">Cadastre sua frota, funcionários e personalize os checklists de acordo com suas necessidades.</p>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">2</div>
+              </div>
+              <div class="ml-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Treinamento da Equipe</h3>
+                <p class="text-gray-600">Nossa equipe treina seus colaboradores para utilização do aplicativo e gestão das ocorrências.</p>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">3</div>
+              </div>
+              <div class="ml-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Uso do Aplicativo</h3>
+                <p class="text-gray-600">Motoristas e equipe de manutenção registram as ocorrências em tempo real através do app mobile.</p>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">4</div>
+              </div>
+              <div class="ml-6">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Análise e Melhorias</h3>
+                <p class="text-gray-600">Acesse relatórios detalhados e insights para reduzir custos e aumentar a segurança operacional.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10">
+            <a href="#demo" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors">
+              Solicitar Demonstração
+              <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Planos e Preços</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Escolha o plano ideal para o tamanho da sua frota</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Plano Básico -->
+        <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
+          <div class="p-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Plano Básico</h3>
+            <p class="text-gray-600 mb-6">Ideal para frotas de até 10 veículos</p>
+            
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-gray-900">R$ 199</span>
+              <span class="text-gray-600">/mês</span>
+            </div>
+            
+            <ul class="space-y-4 mb-8">
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Até 10 veículos</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Checklists ilimitados</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Registro de ocorrências</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Relatórios básicos</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-times-circle text-red-400 mr-3"></i>
+                <span class="text-gray-400">Alertas automáticos</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-times-circle text-red-400 mr-3"></i>
+                <span class="text-gray-400">Suporte prioritário</span>
+              </li>
+            </ul>
+            
+            <a href="/register" class="block w-full py-3 px-4 text-center bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-colors">
+              Começar Agora
+            </a>
+          </div>
+        </div>
+
+        <!-- Plano Profissional (Destaque) -->
+        <div class="bg-blue-600 rounded-2xl overflow-hidden shadow-xl transform scale-105 relative">
+          <div class="absolute top-0 right-0 bg-yellow-400 text-blue-900 px-4 py-1 text-sm font-bold rounded-bl-lg">
+            MAIS POPULAR
+          </div>
+          <div class="p-8">
+            <h3 class="text-2xl font-bold text-white mb-2">Plano Profissional</h3>
+            <p class="text-blue-100 mb-6">Ideal para frotas de 11 a 50 veículos</p>
+            
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-white">R$ 449</span>
+              <span class="text-blue-100">/mês</span>
+            </div>
+            
+            <ul class="space-y-4 mb-8">
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
+                <span class="text-white">Até 50 veículos</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
+                <span class="text-white">Checklists personalizáveis</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
+                <span class="text-white">Registro de ocorrências</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
+                <span class="text-white">Relatórios detalhados</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
+                <span class="text-white">Alertas automáticos</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-yellow-300 mr-3"></i>
+                <span class="text-white">Suporte prioritário</span>
+              </li>
+            </ul>
+            
+            <a href="/register" class="block w-full py-3 px-4 text-center bg-white text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-colors">
+              Começar Agora
+            </a>
+          </div>
+        </div>
+
+        <!-- Plano Enterprise -->
+        <div class="bg-gray-50 rounded-2xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105">
+          <div class="p-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Plano Enterprise</h3>
+            <p class="text-gray-600 mb-6">Para frotas com mais de 50 veículos</p>
+            
+            <div class="mb-6">
+              <span class="text-4xl font-bold text-gray-900">Sob consulta</span>
+            </div>
+            
+            <ul class="space-y-4 mb-8">
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Veículos ilimitados</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Checklists personalizáveis</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Registro de ocorrências</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Relatórios avançados</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Alertas automáticos</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                <span>Suporte dedicado 24/7</span>
+              </li>
+            </ul>
+            
+            <a href="#contact" class="block w-full py-3 px-4 text-center bg-gray-200 text-gray-800 font-medium rounded-lg hover:bg-gray-300 transition-colors">
+              Entrar em Contato
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <p class="text-gray-600">Precisa de um plano personalizado? <a href="#contact" class="text-blue-600 hover:text-blue-800 font-medium">Fale conosco</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Entre em Contato</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">Tire suas dúvidas ou solicite uma demonstração personalizada</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div>
+          <form class="space-y-6">
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nome completo</label>
+              <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+              <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+            </div>
+
+            <div>
+              <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Empresa</label>
+              <input type="text" id="company" name="company" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+              <label for="vehicles" class="block text-sm font-medium text-gray-700 mb-1">Quantidade de Veículos</label>
+              <select id="vehicles" name="vehicles" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                <option value="1-10">1-10 veículos</option>
+                <option value="11-50">11-50 veículos</option>
+                <option value="51-100">51-100 veículos</option>
+                <option value="100+">Mais de 100 veículos</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Mensagem</label>
+              <textarea id="message" name="message" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required></textarea>
+            </div>
+
+            <div>
+              <button type="submit" class="w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md">
+                Enviar Mensagem
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="space-y-8">
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Informações de Contato</h3>
+            
+            <div class="space-y-4">
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <i class="fas fa-map-marker-alt text-blue-600 text-xl mt-1"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-gray-900 font-medium">Endereço</p>
+                  <p class="text-gray-600">Av. Paulista, 1000, São Paulo - SP</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <i class="fas fa-phone-alt text-blue-600 text-xl mt-1"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-gray-900 font-medium">Telefone</p>
+                  <p class="text-gray-600">(11) 3000-1000</p>
+                </div>
+              </div>
+              
+              <div class="flex items-start">
+                <div class="flex-shrink-0">
+                  <i class="fas fa-envelope text-blue-600 text-xl mt-1"></i>
+                </div>
+                <div class="ml-4">
+                  <p class="text-gray-900 font-medium">E-mail</p>
+                  <p class="text-gray-600">contato@turnoauto.com.br</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Horário de Atendimento</h3>
+            <p class="text-gray-600">Segunda a sexta-feira, das 8h às 18h</p>
+          </div>
+          
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Redes Sociais</h3>
+            <div class="flex space-x-4">
+              <a href="#" class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" class="w-10 h-10 bg-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" class="w-10 h-10 bg-blue-800 text-white rounded-full flex items-center justify-center hover:bg-blue-900 transition-colors">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#" class="w-10 h-10 bg-pink-600 text-white rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
+                <i class="fab fa-instagram"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div>
+          <a href="#" class="flex items-center space-x-2 mb-6">
+            <div class="w-10 h-10 flex items-center justify-center">
+              <img src="logo1.png" alt="Logo TURNOAUTO">
+            </div>
+            <span class="text-xl font-bold">TURNO<span class="text-blue-400">AUTO</span></span>
+          </a>
+          <p class="text-gray-400 mb-6">Solução completa para gestão de ocorrências em frotas veiculares.</p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="text-gray-400 hover:text-white">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-6">Recursos</h3>
+          <ul class="space-y-3">
+            <li><a href="#checklists" class="text-gray-400 hover:text-white transition-colors">Checklists</a></li>
+            <li><a href="#alerts" class="text-gray-400 hover:text-white transition-colors">Sistema de Alertas</a></li>
+            <li><a href="#reports" class="text-gray-400 hover:text-white transition-colors">Relatórios</a></li>
+            <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Todas as Funcionalidades</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-6">Empresa</h3>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Sobre Nós</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Blog</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Carreiras</a></li>
+            <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contato</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-6">Legal</h3>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Termos de Uso</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Política de Privacidade</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Cookies</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">LGPD</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm">© 2023 TURNOAUTO. Todos os direitos reservados.</p>
+        <div class="mt-4 md:mt-0">
+          <img src="https://via.placeholder.com/240x40?text=Payment+Methods" alt="Métodos de pagamento" class="h-8">
+        </div>
+      </div>
+    </div>
+  </footer>
+
   <script>
     // Adicionando efeito de scroll suave para todos os links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -196,6 +965,17 @@
           });
         }
       });
+    });
+    // Adicionando efeito de mudança na navegação ao rolar
+    window.addEventListener('scroll', function() {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 50) {
+        nav.classList.remove('bg-transparent');
+        nav.classList.add('bg-gray-900', 'bg-opacity-90', 'shadow-lg');
+      } else {
+        nav.classList.add('bg-transparent');
+        nav.classList.remove('bg-gray-900', 'bg-opacity-90', 'shadow-lg');
+      }
     });
   </script>
 </body>
